@@ -1,0 +1,61 @@
+OPERATING SYSTEMS – WINDOWS + LINUX BASICS
+
+SYSTEM CONFIGURATION & SETTINGS – WINDOWS
+- Use "msconfig" to manage startup items, boot options, and services.
+- Use "Control Panel → System & Security → System" to view device info.
+- Windows Settings (WIN + I) is used to manage network, display, apps, accounts, updates.
+- Use "regedit" carefully to modify registry settings when troubleshooting.
+
+USER ACCOUNTS AND PERMISSIONS – WINDOWS
+- Local Users & Groups (lusrmgr.msc) manages users, groups, passwords.
+- Use "netplwiz" to manage auto-login settings.
+- UAC (User Account Control) prevents unauthorized changes; disable ONLY for testing using "User Account Control Settings".
+- NTFS permissions: Basic rights include Read, Write, Modify, Full Control.
+- Run "icacls <path>" to check or reset permissions.
+
+SERVICES, PROCESSES, STARTUP MANAGEMENT
+- Task Manager → Startup tab controls boot-time applications.
+- "services.msc" manages system services; restarting services can fix many issues.
+- On Linux, "systemctl start/stop/status <service>" controls services.
+- On Linux, "top", "htop", and "ps aux" show running processes.
+
+EVENT LOGS – WINDOWS
+- Event Viewer (eventvwr.msc) shows Application, System, Security logs.
+- Common troubleshooting categories:
+  - Red = Error
+  - Yellow = Warning
+  - Blue = Information
+- Frequent problem logs:
+  - Event ID 41: Kernel-Power (unexpected shutdown)
+  - Event ID 7000/7001: Service startup issues
+
+LINUX LOGS
+- /var/log/syslog (general system logs)
+- /var/log/auth.log (login, sudo events)
+- journalctl -xe shows real-time errors and warnings.
+
+FILE SYSTEM NAVIGATION & FIXES – WINDOWS
+- Use "sfc /scannow" to repair corrupted system files.
+- Use "DISM /Online /Cleanup-Image /RestoreHealth" for deeper repairs.
+- CHKDSK /f fixes disk-level problems.
+
+FILE SYSTEM NAVIGATION – LINUX
+- Common commands:
+  - ls, cd, cp, mv, rm, mkdir, rmdir
+  - chmod (change permissions)
+  - chown (file ownership)
+- Use "df -h" to check disk space.
+- Use "du -sh *" to check folder sizes.
+
+COMMAND-LINE BASICS – WINDOWS
+- CMD commands: ipconfig, ping, tracert, netstat, tasklist, systeminfo.
+- PowerShell commands: Get-Process, Get-Service, Restart-Service, Get-EventLog.
+
+COMMAND-LINE BASICS – LINUX
+- Networking: ifconfig/ip, ping, traceroute, nslookup, dig.
+- System: systemctl, service, uname -a, dmesg.
+
+COMMON WINDOWS FIXES
+- Restart Windows Explorer: taskkill /f /im explorer.exe && start explorer.exe
+- Fix broken Start Menu: Get-AppxPackage | Reset-AppxPackage (PowerShell)
+- Clear temp files: %temp%, temp, prefetch

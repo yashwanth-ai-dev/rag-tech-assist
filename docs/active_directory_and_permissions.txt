@@ -1,0 +1,393 @@
+ACTIVE DIRECTORY, USERS, GROUPS & PERMISSIONS — COMPLETE IT SUPPORT KNOWLEDGE BASE
+
+INTRODUCTION
+Active Directory (AD) is the backbone of most corporate networks. It controls user accounts, authentication, permissions, group memberships, computers, domains, and policies. Every helpdesk technician must understand AD concepts deeply because 80% of enterprise issues relate to AD in some form.
+
+----------------------------------------------------------------------------------------------------
+SECTION 1 – WHAT IS ACTIVE DIRECTORY (AD)?
+----------------------------------------------------------------------------------------------------
+
+Active Directory is Microsoft’s directory service used to:
+- Store user accounts
+- Manage authentication (Kerberos, NTLM)
+- Enforce security policies
+- Assign permissions to resources
+- Join computers to a domain
+
+AD STRUCTURE includes:
+- Forest
+- Domains
+- Organizational Units (OUs)
+- Users
+- Groups
+- Computers
+- Group Policies
+
+----------------------------------------------------------------------------------------------------
+SECTION 2 – DOMAIN VS WORKGROUP
+----------------------------------------------------------------------------------------------------
+
+WORKGROUP
+- No central authentication.
+- Each machine has local accounts.
+- Suitable for home networks.
+
+DOMAIN
+- Central authentication via AD.
+- Better security and control.
+- Managed by domain controllers (DCs).
+- Can push group policies to machines.
+
+Companies ALWAYS use domains.
+
+----------------------------------------------------------------------------------------------------
+SECTION 3 – ACTIVE DIRECTORY OBJECTS
+----------------------------------------------------------------------------------------------------
+
+1. USERS  
+- Represent employees or service accounts.
+
+2. GROUPS  
+- Used to assign permissions.
+- Two types:
+  - Security Groups → can assign permissions
+  - Distribution Groups → only for email lists
+
+3. COMPUTERS  
+- Represent joined machines.
+
+4. ORGANIZATIONAL UNITS (OUs)
+- Logical containers for grouping users/computers.
+- Policies are usually applied at OU level.
+
+----------------------------------------------------------------------------------------------------
+SECTION 4 – AUTHENTICATION METHODS
+----------------------------------------------------------------------------------------------------
+
+AD uses two methods:
+
+1. **Kerberos**  
+   - Default method in modern Windows domains.  
+   - Fast and secure.  
+   - Requires synchronized time between machines.
+
+2. **NTLM**  
+   - Older fallback method.  
+   - Used if Kerberos fails.
+
+WHEN KERBEROS FAILS
+- Incorrect time (more than 5-minute drift)
+- DNS server misconfigured
+- SPN (Service Principal Name) issues
+
+----------------------------------------------------------------------------------------------------
+SECTION 5 – COMMON HELP DESK TASKS IN AD
+----------------------------------------------------------------------------------------------------
+
+TASK 1 — PASSWORD RESET
+Steps:
+1. Verify identity.
+2. Open Active Directory Users and Computers (ADUC).
+3. Search for the user.
+4. Right-click → Reset Password.
+5. Enable “User must change password at next logon.”
+6. Update ticket notes.
+
+TASK 2 — ACCOUNT UNLOCK
+- Triggered after failed login attempts.
+Steps:
+1. Open ADUC.
+2. User → Properties → Account tab.
+3. Check “Unlock account”.
+4. Apply.
+
+TASK 3 — ADD USER TO A GROUP
+Steps:
+1. ADUC → find user.
+2. Right-click → Add to a group.
+3. Enter group name.
+4. Confirm membership.
+
+***Never add users to Domain Admins or privileged groups without approval.***
+
+TASK 4 — CREATE NEW USER ACCOUNT
+Information needed:
+- Full name
+- Username (samAccountName)
+- Email alias
+- Department
+- Manager
+- OU location
+- License (if using Microsoft 365)
+
+TASK 5 — MOVE USER TO ANOTHER OU
+Often required when:
+- User changes department
+- Group Policies must change
+
+----------------------------------------------------------------------------------------------------
+SECTION 6 – GROUP TYPES & SCOPES
+----------------------------------------------------------------------------------------------------
+
+Two types of groups:
+
+1. **Security Groups**
+   - Used to assign permissions to resources (folders, shares, printers).
+
+2. **Distribution Groups**
+   - Used only for email campaigns.
+   - Not for permissions.
+
+GROUP SCOPES:
+1. **Global Group**
+   - Contains users.
+   - Assigned to domain resources.
+
+2. **Domain Local Group**
+   - Can contain users and groups from other domains.
+   - Used to assign access to local resources.
+
+3. **Universal Group**
+   - Used in multi-domain environments.
+
+STANDARD MICROSOFT ACCESS MODEL
+**AGDLP**
+- Accounts → Global Groups → Domain Local Groups → Permissions
+This is how enterprise permissions are structured.
+
+----------------------------------------------------------------------------------------------------
+SECTION 7 – PERMISSIONS & ACCESS CONTROL
+----------------------------------------------------------------------------------------------------
+
+PERMISSION TYPES:
+- Read
+- Write
+- Modify
+- Full Control
+- Execute
+
+AD uses **Access Control Lists (ACLs)** to manage permissions.
+
+BEST PRACTICES:
+- Never assign permissions directly to individual users.
+- Always assign to groups.
+- Avoid “Everyone” or “Authenticated Users” with high permissions.
+- Follow principle of least privilege.
+
+----------------------------------------------------------------------------------------------------
+SECTION 8 – COMMON AD ISSUES & SOLUTIONS
+----------------------------------------------------------------------------------------------------
+
+ISSUE 1 — USER CANNOT LOGIN
+Common causes:
+- Wrong password
+- Account locked
+- Expired password
+- Machine not communicating with domain
+- Incorrect time sync
+- Cached credentials used offline
+
+Fixes:
+- Reset password
+- Unlock account
+- Check time settings
+- Verify DNS server is domain controller
+
+ISSUE 2 — ACCOUNT LOCKOUTS
+Causes:
+- Old password saved in:
+  - Outlook app
+  - Windows credentials
+  - Phone mail app
+  - Remote desktop clients
+- Mapped drives
+
+Fix:
+- Reset password
+- Inform user to update password on all devices
+
+ISSUE 3 — GROUP POLICY NOT APPLIED (GPO)
+Causes:
+- User/computer in wrong OU
+- Replication issues
+- GPO misconfigured
+- Slow link detection
+
+Fix:
+- Run: gpupdate /force
+- Check: gpresult /h report.html
+
+ISSUE 4 — ACCESS DENIED TO SHARED FOLDER
+Causes:
+- Missing group membership
+- NTFS permissions incorrect
+- Share permissions not aligned
+
+Fix:
+- Check user’s groups
+- Check folder ACL
+- Reapply permissions
+
+ISSUE 5 — NEW USER CANNOT ACCESS NETWORK DRIVES
+Causes:
+- User not in correct group
+- GPO mapping drives incorrectly
+
+Fix:
+- Add user to drive-mapping group
+- Run gpupdate
+
+ISSUE 6 — MACHINE NOT SHOWING IN AD
+Causes:
+- Not joined properly
+- DNS issues
+- Computer object deleted
+
+Fix:
+- Rejoin domain
+
+----------------------------------------------------------------------------------------------------
+SECTION 9 – DNS IN ACTIVE DIRECTORY
+----------------------------------------------------------------------------------------------------
+
+AD **depends heavily on DNS**.
+
+CORRECT DNS CONFIGURATION:
+- Domain machines must use Domain Controller as DNS (not Google DNS).
+- If DNS points elsewhere, AD login fails.
+
+DNS RECORDS:
+- A records → map hostname to IP
+- PTR records → reverse lookup
+- SRV records → locate domain controllers
+
+SRV records examples:
+_ldap._tcp.dc._msdcs.domain.com  
+_kerberos._tcp.dc._msdcs.domain.com
+
+WITHOUT THESE → authentication breaks.
+
+----------------------------------------------------------------------------------------------------
+SECTION 10 – ACTIVE DIRECTORY REPLICATION
+----------------------------------------------------------------------------------------------------
+
+Replication is how DCs stay in sync.
+
+Replication problems lead to:
+- Password mismatches
+- GPO not applying
+- New user/group not visible everywhere
+
+Check replication:
+Run:
+  repadmin /replsummary
+
+Common issues:
+- Network disconnection
+- Stale metadata
+- USN rollback errors
+
+----------------------------------------------------------------------------------------------------
+SECTION 11 – SERVICE ACCOUNTS
+----------------------------------------------------------------------------------------------------
+
+Service accounts run applications, scheduled tasks, and database services.
+
+Types:
+1. Regular AD user accounts
+2. Group Managed Service Accounts (gMSA)
+3. Local service accounts
+
+Best practices:
+- Do NOT use personal user accounts for services.
+- Set “Password never expires” only if required.
+- Use gMSA whenever possible for security.
+
+----------------------------------------------------------------------------------------------------
+SECTION 12 – OU STRUCTURE EXAMPLES
+----------------------------------------------------------------------------------------------------
+
+Common OU design:
+
+CORPORATE OU
+→ Users  
+→ Computers  
+→ IT  
+→ Finance  
+→ HR  
+→ Sales  
+→ Service Accounts  
+→ Servers  
+→ Laptops  
+→ Desktops  
+→ Printers  
+
+NEVER put users and computers in the same OU.
+
+----------------------------------------------------------------------------------------------------
+SECTION 13 – AD COMMAND LINE TOOLS
+----------------------------------------------------------------------------------------------------
+
+USEFUL COMMANDS:
+
+CHECK LOGIN SERVER:
+  echo %logonserver%
+
+FORCE UPDATE:
+  gpupdate /force
+
+SHOW APPLIED GPOs:
+  gpresult /r
+
+QUERY USER LOCKOUT:
+  net user username /domain
+
+CHECK DOMAIN INFO:
+  systeminfo | findstr /B /C:"Domain"
+
+----------------------------------------------------------------------------------------------------
+SECTION 14 – ACCOUNT EXPIRATION & PASSWORD POLICY
+----------------------------------------------------------------------------------------------------
+
+Common policies:
+- Password expiration every 60/90 days
+- Account lockout after 5 failed attempts
+- Minimum password length (8–12)
+- Complexity rules (uppercase, lowercase, digit, special char)
+
+You can view these using:
+  net accounts
+
+----------------------------------------------------------------------------------------------------
+SECTION 15 – TRUST RELATIONSHIPS (ADVANCED)
+----------------------------------------------------------------------------------------------------
+
+Domains can trust each other:
+
+1. Parent-child
+2. Forest trust
+3. External trust
+4. Shortcut trust
+
+Trust allows:
+- Users in one domain to access resources in another.
+
+----------------------------------------------------------------------------------------------------
+SECTION 16 – AZURE AD VS ON-PREMISE AD
+----------------------------------------------------------------------------------------------------
+
+ON-PREMISE AD:
+- Uses domain controllers
+- Kerberos authentication
+
+AZURE AD:
+- Cloud-based identity platform
+- Uses OAuth, SAML, OIDC
+- No GPOs
+- Uses Conditional Access instead
+
+HYBRID AD setups are very common.
+
+----------------------------------------------------------------------------------------------------
+END OF FILE
+----------------------------------------------------------------------------------------------------

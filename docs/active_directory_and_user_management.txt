@@ -1,0 +1,396 @@
+ACTIVE DIRECTORY & USER MANAGEMENT – COMPLETE SUPPORT TECH KNOWLEDGE BASE
+
+INTRODUCTION
+Active Directory (AD) is the backbone of user authentication, policy enforcement, and resource access within Windows-based enterprise networks. A technician must understand how accounts, groups, OUs, and policies work to diagnose login failures, permission issues, lockouts, and system access problems.
+
+This document explains practical, real-world AD troubleshooting—NOT theoretical definitions. Everything here is directly useful for solving user issues.
+
+----------------------------------------------------------------------------------------------------
+SECTION 1 – BASIC AD CONCEPTS (PRACTICAL)
+----------------------------------------------------------------------------------------------------
+
+DOMAIN CONTROLLER (DC)
+- The server responsible for authentication (Kerberos/NTLM).
+- Handles logins, password changes, Group Policy, replication.
+
+USER ACCOUNT
+- Represents an employee.
+- Includes username, SID, group memberships, password policies.
+
+COMPUTER ACCOUNT
+- Automatically created when a device joins the domain.
+
+ORGANIZATIONAL UNIT (OU)
+- Logical folder for users/computers.
+- Group Policy is linked to OUs.
+
+GROUPS
+1. Security Groups
+   - Control access to files, printers, applications.
+2. Distribution Groups
+   - Used for email lists (not for permissions).
+
+GROUP SCOPE
+- Global
+- Domain Local
+- Universal
+
+----------------------------------------------------------------------------------------------------
+SECTION 2 – COMMON USER ISSUES (AND HOW TO FIX THEM)
+----------------------------------------------------------------------------------------------------
+
+Below are real-world problems tech support deals with every day:
+
+ISSUE 1 – USER FORGOT PASSWORD
+Fix:
+1. Open Active Directory Users and Computers (ADUC)
+2. Right-click user → Reset Password.
+3. Make sure “User must change password at next login” is set.
+4. Communicate the new password securely.
+
+ISSUE 2 – ACCOUNT LOCKED OUT
+Fix:
+1. ADUC → right-click user → Properties → Account.
+2. If “Unlock account” checkbox is visible → check it.
+3. Identify root cause:
+   - Old credentials stored in:
+     - Outlook
+     - Mobile email
+     - Windows Credential Manager
+     - RDP saved sessions
+
+ISSUE 3 – USER CANNOT LOGIN
+Possible causes:
+- Incorrect password
+- Account locked
+- Time out of sync between client and domain
+- DNS misconfiguration
+- No connectivity to domain controller
+- Expired password
+- Account disabled
+
+Fix workflow:
+1. Check account status in ADUC.
+2. Check system time (difference must be < 5 minutes).
+3. Run:
+   nltest /dsgetdc:domainname  
+4. Ping domain controller.
+5. Check if user is in correct OU (policy might block login).
+
+ISSUE 4 – GROUP MEMBERSHIP NOT APPLYING
+Cause:
+- Token not updated until next login.
+
+Fix:
+1. Add user to group.
+2. Ask them to log off and log in again.
+3. Or force token refresh:
+   klist purge
+
+ISSUE 5 – USER CANNOT ACCESS NETWORK SHARE
+Possible causes:
+- Wrong permissions on folder.
+- User not in required group.
+- NTFS permissions incorrect.
+- Share permissions incorrect.
+
+Fix:
+1. Check user’s security group memberships.
+2. Check NTFS permissions:
+   Right-click folder → Security.
+3. Check Share permissions.
+4. Refresh:
+   gpupdate /force
+
+ISSUE 6 – PRINTER NOT SHOWING FOR USER
+Causes:
+- Printer deployed via Group Policy but GPO not applied.
+- User not in the correct group.
+
+Fix:
+1. Add user to printer access group.
+2. Run:
+   gpupdate /force
+3. Check GPO event logs:
+   Event Viewer → Applications and Services Logs → Microsoft → Windows → GroupPolicy
+
+----------------------------------------------------------------------------------------------------
+SECTION 3 – PASSWORD, ACCOUNT & SECURITY POLICIES
+----------------------------------------------------------------------------------------------------
+
+PASSWORD POLICIES INCLUDE:
+- Minimum length
+- Complexity (uppercase, lowercase, numbers, symbols)
+- Password history
+- Maximum age
+- Account lockout threshold
+
+These are usually controlled by:
+- Default Domain Policy
+- Fine-Grained Password Policies (FGPP)
+
+COMMON PROBLEMS:
+1. User cannot set password → fails complexity.
+2. User password expires → cannot log in.
+3. Service accounts break when password changes.
+
+----------------------------------------------------------------------------------------------------
+SECTION 4 – GROUP POLICY TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+COMMON GPO ISSUES
+- GPO not applying.
+- Login scripts not running.
+- Software deployment failing.
+- Drive mappings not appearing.
+
+TROUBLESHOOTING COMMANDS
+1. Force update:
+   gpupdate /force
+
+2. Check which policies applied:
+   gpresult /r  
+   gpresult /h report.html
+
+3. View logs:
+   Event Viewer → Group Policy.
+
+4. Ensure device is in correct OU.
+
+5. Check GPO link order:
+   - Domain
+   - Site
+   - OU
+   - Sub-OU  
+Higher-level GPOs can override lower ones.
+
+6. Check WMI filters (may block GPO completely).
+
+----------------------------------------------------------------------------------------------------
+SECTION 5 – ORGANIZATIONAL UNITS (OUs)
+----------------------------------------------------------------------------------------------------
+
+OUs ARE USED FOR:
+- Separating users by department
+- Linking GPOs
+- Organizing computer objects
+- Delegating permissions
+
+IMPORTANT NOTES:
+- DO NOT put users in "Computers" default container.
+- DO NOT put computers in "Users" default container.
+- Production environments use:
+  - OU for Users
+  - OU for Computers
+  - Sub-OUs per department
+
+----------------------------------------------------------------------------------------------------
+SECTION 6 – COMMON ADMIN TASKS (REAL-WORLD)
+----------------------------------------------------------------------------------------------------
+
+TASK 1 – CREATE A NEW USER
+Steps:
+1. ADUC → Right-click OU → New → User.
+2. Enter username, first/last name.
+3. Set initial password.
+4. Add to required groups:
+   - Domain Users (default)
+   - Department-specific groups
+   - App-specific groups
+
+TASK 2 – DISABLE A USER
+1. Right-click → Disable Account.
+2. Move user object to “Disabled Users” OU.
+3. Reset password for security.
+
+TASK 3 – REMOVE USER FROM GROUPS
+1. ADUC → User → Member Of tab.
+2. Remove unnecessary groups.
+
+TASK 4 – ADD USER TO GROUP
+1. ADUC → User → Member Of → Add.
+2. Add appropriate security group.
+
+TASK 5 – CREATE SERVICE ACCOUNT
+- Disable interactive login.
+- Strong password.
+- Set “Password never expires” only for service accounts.
+
+----------------------------------------------------------------------------------------------------
+SECTION 7 – ACTIVE DIRECTORY COMMANDS (VERY USEFUL)
+----------------------------------------------------------------------------------------------------
+
+Windows commands (run in CMD or PowerShell):
+
+CHECK USER INFO
+   net user username /domain
+
+RESET PASSWORD
+   net user username NewPassword /domain
+
+CHECK DOMAIN CONTROLLER
+   nltest /dsgetdc:domainname
+
+FORCE REPLICATION
+   repadmin /syncall /AdeP
+
+CHECK LOGGED-IN USER
+   whoami
+
+CHECK GROUP MEMBERSHIP
+   whoami /groups
+
+----------------------------------------------------------------------------------------------------
+SECTION 8 – LOGIN FAILURE TROUBLESHOOTING FLOW
+----------------------------------------------------------------------------------------------------
+
+1. Ask user exact error message (“invalid credentials”, “account disabled”).
+2. Check account status in ADUC.
+3. Unlock if locked.
+4. Reset password if needed.
+5. Confirm system time is correct.
+6. Check domain controller connectivity.
+7. Check DNS settings:
+   - MUST point to domain controller’s IP.
+   Example:
+     Preferred DNS: 10.0.0.5  
+     Alternate DNS: (empty or another DC)
+
+8. Test:
+   ping domaincontroller  
+   nltest /dsgetdc:domain
+
+9. Try login over RDP.
+10. If still failing, profile may be corrupt → create new profile.
+
+----------------------------------------------------------------------------------------------------
+SECTION 9 – ACCOUNT LOCKOUT INVESTIGATION
+----------------------------------------------------------------------------------------------------
+
+REASONS USERS KEEP GETTING LOCKED OUT
+1. Mobile email using old password.
+2. Outlook storing old credentials.
+3. Windows Credential Manager saved passwords.
+4. RDP sessions with saved password.
+5. Mapped network drives using old credentials.
+6. Third-party apps storing credentials.
+
+TOOLS
+- Microsoft Account Lockout Tool (ALockout.dll)
+- Event Viewer → Security Log → Event ID 4740
+
+TROUBLESHOOTING STEPS
+1. Check which device caused lockout.
+2. Clear saved credentials:
+   control keymgr.dll
+3. Reset password.
+4. Restart Outlook/mobile email.
+
+----------------------------------------------------------------------------------------------------
+SECTION 10 – NETWORK DRIVE & SHARE PERMISSION ISSUES
+----------------------------------------------------------------------------------------------------
+
+COMMON CAUSES
+- User not in security group.
+- NTFS permissions incorrect.
+- Share permissions not set.
+- Offline files conflict.
+
+FIX STEPS
+1. Add user to correct group.
+2. Run:
+   gpupdate /force
+3. Reconnect network drive.
+4. Check NTFS + Share permissions both.
+
+PERMISSION RULE:
+Effective permission = Lowest of NTFS & Share permissions.
+
+----------------------------------------------------------------------------------------------------
+SECTION 11 – USER PROFILE ISSUES
+----------------------------------------------------------------------------------------------------
+
+SYMPTOMS OF CORRUPT PROFILE
+- Desktop icons missing.
+- Start menu not working.
+- “Temporary profile loaded” message.
+- Slow login.
+
+FIX:
+1. Backup user data.
+2. Delete:
+   C:\Users\USERNAME  
+3. Registry:
+   HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList  
+   Delete SID ending in .bak
+
+4. Re-login to create fresh profile.
+
+----------------------------------------------------------------------------------------------------
+SECTION 12 – PASSWORD RESET RULES
+----------------------------------------------------------------------------------------------------
+
+WHEN TO RESET PASSWORD
+- User forgot password.
+- Suspected phishing.
+- Login attempt alerts.
+- MFA compromised.
+
+WHEN NOT TO RESET PASSWORD
+- Service account (may break apps).
+
+STRONG PASSWORD GUIDELINES
+- At least 12 characters.
+- Avoid real words.
+- Mix uppercase/lowercase/numbers/symbols.
+- No reuse of last 5 passwords.
+
+----------------------------------------------------------------------------------------------------
+SECTION 13 – GROUP POLICY LOGIN SCRIPTS
+----------------------------------------------------------------------------------------------------
+
+If scripts don’t run:
+1. Check GPO linked to user’s OU.
+2. Check script path:
+   \\domain\netlogon\scriptname.bat
+3. Ensure file permissions allow Domain Users to read.
+4. Check Event Viewer:
+   Applications → GroupPolicy.
+
+----------------------------------------------------------------------------------------------------
+SECTION 14 – MFA & REMOTE ACCESS ISSUES
+----------------------------------------------------------------------------------------------------
+
+MFA ISSUES
+- User not receiving OTP.
+- Device sync issues.
+
+Fix:
+1. Re-register MFA.
+2. Check mobile time sync.
+3. Use alternate method (email/backup code).
+
+RDP ISSUES
+- User not in Remote Desktop Users group.
+- Firewall blocking RDP (port 3389).
+- Network Level Authentication required.
+
+----------------------------------------------------------------------------------------------------
+SECTION 15 – AD HEALTH DIAGNOSTICS
+----------------------------------------------------------------------------------------------------
+
+CHECK DOMAIN HEALTH
+   dcdiag /v
+
+CHECK REPLICATION HEALTH
+   repadmin /replsummary
+
+CHECK SYSVOL STATUS
+   net share
+
+If SYSVOL not shared:
+- FRS/DFS replication broken.
+
+----------------------------------------------------------------------------------------------------
+END OF FILE
+----------------------------------------------------------------------------------------------------

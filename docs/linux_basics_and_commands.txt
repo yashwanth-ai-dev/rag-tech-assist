@@ -1,0 +1,446 @@
+LINUX BASICS & COMMAND MASTERY — COMPLETE TROUBLESHOOTING GUIDE FOR IT SUPPORT
+
+INTRODUCTION
+Linux is widely used in servers, cloud systems, DevOps tools, firewalls, and enterprise backend systems. Every IT support engineer must understand the fundamentals. This document covers essential commands, tools, logs, permissions, services, processes, networking, and troubleshooting techniques.
+
+----------------------------------------------------------------------------------------------------
+SECTION 1 – UNDERSTANDING LINUX FILESYSTEM
+----------------------------------------------------------------------------------------------------
+
+LINUX DIRECTORY STRUCTURE
+/               → root of the file system  
+/bin            → essential binaries  
+/sbin           → admin binaries  
+/usr            → user apps and libraries  
+/etc            → configuration files  
+/home           → user directories  
+/var            → logs, temporary data  
+/tmp            → temporary files  
+/opt            → optional software  
+/run            → service runtime data  
+/dev            → devices  
+/proc           → process information  
+/lib, /lib64    → system libraries  
+
+KEY RULES:
+- Everything is a file.
+- Linux is case-sensitive.
+- Config files live in /etc.
+
+----------------------------------------------------------------------------------------------------
+SECTION 2 – BASIC LINUX COMMANDS
+----------------------------------------------------------------------------------------------------
+
+NAVIGATION
+ls              → list files  
+ls -l           → detailed list  
+cd <path>       → change directory  
+pwd             → show current directory  
+
+VIEWING FILES
+cat file.txt  
+head file.txt  
+tail file.txt  
+tail -f log.txt → live log view  
+less file.txt   → scrollable viewer
+
+FILE OPERATIONS
+cp source dest  
+mv source dest  
+rm file  
+rm -r folder  
+touch file.txt  
+mkdir foldername  
+
+FINDING FILES
+find / -name filename  
+grep "text" file.txt  
+grep -R "pattern" /var/log  
+
+TEXT EDITORS
+nano file  
+vim file  
+
+----------------------------------------------------------------------------------------------------
+SECTION 3 – PERMISSIONS & OWNERSHIP
+----------------------------------------------------------------------------------------------------
+
+FORMAT:
+-rwxr-xr--  
+1st part → file type + permissions  
+2nd → owner  
+3rd → group  
+4th → others
+
+PERMISSION VALUES
+r = 4  
+w = 2  
+x = 1  
+
+COMMON PERMISSIONS:
+chmod 755 file  
+chmod 644 file  
+chmod -R 777 folder (DANGEROUS)
+
+OWNERSHIP
+chown user file  
+chown user:group file  
+chgrp group file
+
+CHECK USER & GROUP:
+whoami  
+groups  
+id  
+
+----------------------------------------------------------------------------------------------------
+SECTION 4 – USERS & GROUPS MANAGEMENT
+----------------------------------------------------------------------------------------------------
+
+CREATE USER:
+useradd username  
+passwd username
+
+DELETE USER:
+userdel username  
+
+CREATE GROUP:
+groupadd groupname  
+
+ADD USER TO GROUP:
+usermod -aG groupname username  
+
+SHOW ALL USERS:
+cat /etc/passwd  
+
+----------------------------------------------------------------------------------------------------
+SECTION 5 – PROCESSES & SYSTEM RESOURCES
+----------------------------------------------------------------------------------------------------
+
+LIST PROCESSES:
+ps aux  
+top  
+htop (if installed)
+
+KILL PROCESS:
+kill PID  
+kill -9 PID (force kill)
+
+SYSTEM USAGE:
+df -h       → disk usage  
+du -sh *    → folder sizes  
+free -h     → memory  
+uptime      → system load  
+
+CHECK CPU:
+lscpu  
+top  
+
+CHECK HARDWARE:
+lsblk  
+lspci  
+lsusb  
+
+----------------------------------------------------------------------------------------------------
+SECTION 6 – SYSTEM LOGS (IMPORTANT)
+----------------------------------------------------------------------------------------------------
+
+Most logs are under:
+
+/var/log/
+
+CRITICAL LOG FILES:
+syslog (Debian/Ubuntu)  
+messages (CentOS/RHEL)  
+auth.log → login attempts  
+dmesg → kernel messages  
+boot.log → system boot  
+
+VIEW LOGS:
+tail -f /var/log/syslog  
+journalctl -xe  
+journalctl -u nginx  
+journalctl -u ssh  
+
+SYSTEMD LOGS:
+journalctl --since "1 hour ago"  
+journalctl -u service_name  
+
+----------------------------------------------------------------------------------------------------
+SECTION 7 – SYSTEMD SERVICES
+----------------------------------------------------------------------------------------------------
+
+START SERVICE:
+systemctl start service  
+
+STOP SERVICE:
+systemctl stop service  
+
+RESTART SERVICE:
+systemctl restart service  
+
+CHECK STATUS:
+systemctl status service  
+
+ENABLE ON BOOT:
+systemctl enable nginx  
+
+DISABLE:
+systemctl disable nginx  
+
+LIST SERVICES:
+systemctl list-units --type=service  
+
+----------------------------------------------------------------------------------------------------
+SECTION 8 – PACKAGE MANAGEMENT
+----------------------------------------------------------------------------------------------------
+
+DEBIAN / UBUNTU:
+apt update  
+apt upgrade  
+apt install package  
+apt remove package  
+apt purge package  
+
+CENTOS / RHEL / FEDORA:
+yum install package  
+yum remove package  
+dnf install package  
+dnf update  
+
+CHECK INSTALLED PACKAGES:
+dpkg -l  
+rpm -qa  
+
+----------------------------------------------------------------------------------------------------
+SECTION 9 – NETWORKING COMMANDS
+----------------------------------------------------------------------------------------------------
+
+CHECK IP:
+ip a  
+ifconfig (older)
+
+CHECK ROUTES:
+ip route  
+
+CHECK DNS:
+cat /etc/resolv.conf  
+
+TEST CONNECTIVITY:
+ping google.com  
+ping 8.8.8.8  
+curl http://website.com  
+wget http://website.com  
+
+CHECK OPEN PORTS:
+ss -tulnp  
+netstat -tulnp  
+
+RESTART NETWORK:
+systemctl restart NetworkManager  
+
+----------------------------------------------------------------------------------------------------
+SECTION 10 – FIREWALL (UFW & FIREWALLD)
+----------------------------------------------------------------------------------------------------
+
+UFW (Ubuntu):
+ufw enable  
+ufw disable  
+ufw status  
+ufw allow 22  
+ufw deny 80  
+
+FIREWALLD (CentOS/RHEL):
+firewall-cmd --state  
+firewall-cmd --add-port=80/tcp --permanent  
+firewall-cmd --reload  
+
+----------------------------------------------------------------------------------------------------
+SECTION 11 – SSH MANAGEMENT
+----------------------------------------------------------------------------------------------------
+
+START SSH:
+systemctl start ssh  
+
+CONFIG FILE:
+nano /etc/ssh/sshd_config  
+
+COMMON SSH ISSUES:
+- Port blocked by firewall  
+- Wrong permissions on ~/.ssh  
+- Wrong username  
+- Service not running  
+
+CHECK CONNECTION:
+ssh -v user@server  
+
+COPY FILES USING SCP:
+scp file.txt user@server:/path/  
+
+----------------------------------------------------------------------------------------------------
+SECTION 12 – STORAGE & FILESYSTEM TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+CHECK DISK HEALTH:
+smartctl -a /dev/sda  
+
+CHECK MOUNTED DISKS:
+df -h  
+
+CHECK DISK PARTITIONS:
+fdisk -l  
+
+MOUNT DISK:
+mount /dev/sdb1 /mnt  
+
+UNMOUNT:
+umount /mnt  
+
+CHECK FILESYSTEM ERRORS:
+fsck /dev/sda1  
+
+----------------------------------------------------------------------------------------------------
+SECTION 13 – COMMON TROUBLESHOOTING SCENARIOS
+----------------------------------------------------------------------------------------------------
+
+SCENARIO 1 – HIGH CPU USAGE  
+Steps:
+1. Check processes → top  
+2. Identify culprit  
+3. Restart service  
+4. Update or reconfigure app  
+5. Check logs
+
+SCENARIO 2 – SERVER CANNOT REACH INTERNET  
+Steps:
+1. Check IP → ip a  
+2. Check DNS → resolv.conf  
+3. Ping gateway  
+4. Ping 8.8.8.8 → tests ISP  
+5. Check firewall rules  
+6. Check proxy settings  
+
+SCENARIO 3 – APPLICATION NOT STARTING  
+Steps:
+1. systemctl status app  
+2. journalctl -u app  
+3. Check config file syntax  
+4. Check logs in /var/log  
+5. Restart service  
+
+SCENARIO 4 – PERMISSION DENIED  
+Steps:
+1. Check file owner → ls -l  
+2. Check chmod  
+3. Check group membership  
+4. Check SELinux (if RHEL):  
+   getenforce  
+
+SCENARIO 5 – SSH NOT WORKING  
+Steps:
+1. Check service: systemctl status ssh  
+2. Check firewall  
+3. Check port  
+4. Check permissions of ~/.ssh  
+5. Check host key issues  
+
+----------------------------------------------------------------------------------------------------
+SECTION 14 – SELINUX BASICS (RHEL/CentOS)
+----------------------------------------------------------------------------------------------------
+
+CHECK MODE:
+getenforce  
+
+MODES:
+Enforcing → strictly blocks  
+Permissive → logs but doesn’t block  
+Disabled → off
+
+CHANGE MODE:
+setenforce 0 (temporary)  
+
+Audit logs:
+cat /var/log/audit/audit.log  
+
+----------------------------------------------------------------------------------------------------
+SECTION 15 – CRON JOBS
+----------------------------------------------------------------------------------------------------
+
+LIST CRON JOBS:
+crontab -l  
+
+EDIT:
+crontab -e  
+
+SYSTEM-WIDE CRON:
+ls /etc/cron.daily  
+ls /etc/cron.hourly  
+
+CRON FORMAT:
+* * * * * command  
+min hour day month weekday
+
+----------------------------------------------------------------------------------------------------
+SECTION 16 – LINUX BOOT TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+CHECK BOOT LOGS:
+journalctl -b  
+
+CHECK FAILED SERVICES:
+systemctl --failed  
+
+GRUB ISSUES:
+- Wrong boot order
+- Missing kernel
+- Corrupt filesystem
+
+----------------------------------------------------------------------------------------------------
+SECTION 17 – SHELL BASICS
+----------------------------------------------------------------------------------------------------
+
+ENVIRONMENT VARIABLES:
+echo $PATH  
+export VAR=value  
+
+ALIASES:
+alias ll="ls -la"  
+
+RUNNING SCRIPTS:
+bash script.sh  
+chmod +x script.sh  
+
+----------------------------------------------------------------------------------------------------
+SECTION 18 – ADVANCED COMMANDS EVERY TECH SHOULD KNOW
+----------------------------------------------------------------------------------------------------
+
+NETWORK MONITORING:
+tcpdump  
+iftop  
+
+PROCESS MONITORING:
+strace  
+lsof  
+pmap  
+
+FILESYSTEM:
+du -a | sort -n  
+rsync -av source dest  
+
+----------------------------------------------------------------------------------------------------
+SECTION 19 – TROUBLESHOOTING CHECKLIST
+----------------------------------------------------------------------------------------------------
+
+Always check:
+1. Logs  
+2. Service status  
+3. Network connectivity  
+4. Permissions  
+5. Config files  
+6. Resource usage  
+7. Recent changes  
+8. Firewalls  
+9. SELinux  
+
+----------------------------------------------------------------------------------------------------
+END OF FILE
+----------------------------------------------------------------------------------------------------

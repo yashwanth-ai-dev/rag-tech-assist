@@ -1,0 +1,437 @@
+WINDOWS ADMINISTRATION DEEP DIVE — ADVANCED IT SUPPORT KNOWLEDGE BASE
+
+INTRODUCTION
+This document covers advanced Windows administration concepts required by IT support engineers and system administrators. It includes system internals, services, registry, advanced troubleshooting commands, PowerShell administration, updates, drivers, GPO, system repair, boot issues, and performance diagnostics.
+
+----------------------------------------------------------------------------------------------------
+SECTION 1 – WINDOWS SERVICES (DETAILED)
+----------------------------------------------------------------------------------------------------
+
+SERVICE MANAGEMENT CONSOLE:
+services.msc
+
+COMMON SERVICES:
+- Windows Update (wuauserv)
+- Print Spooler (spooler)
+- DHCP Client (dhcp)
+- DNS Client (dnscache)
+- Remote Desktop Services (TermService)
+- Group Policy Client (gpsvc)
+- Windows Installer (msiserver)
+- Windows Defender Antivirus (WinDefend)
+
+CHECK SERVICE STATUS:
+sc query "spooler"
+
+START/STOP/RESTART:
+net stop spooler  
+net start spooler  
+Restart-Service spooler (PowerShell)
+
+FAILURE SYMPTOMS:
+- Apps not installing → Windows Installer stopped  
+- Printer issues → Spooler problems  
+- Login slow → Group Policy Client issues  
+- Network issues → DHCP/DNS client failures  
+
+----------------------------------------------------------------------------------------------------
+SECTION 2 – WINDOWS REGISTRY (ADMIN LEVEL)
+----------------------------------------------------------------------------------------------------
+
+REGISTRY EDITOR:
+regedit
+
+REGISTRY STRUCTURE:
+HKEY_LOCAL_MACHINE (HKLM) → system-wide configs  
+HKEY_CURRENT_USER (HKCU) → user-specific  
+HKEY_CLASSES_ROOT (HKCR) → file associations  
+HKEY_USERS (HKU)  
+HKEY_CURRENT_CONFIG (HKCC)
+
+CAUTION:
+Registry edits can break Windows.
+
+USE CASES:
+- Fix startup apps  
+- Repair corrupt service paths  
+- Remove malware autoruns  
+- Fix application settings  
+
+CHECK STARTUP APPS:
+HKLM\Software\Microsoft\Windows\CurrentVersion\Run  
+HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+
+CHECK NETWORK ISSUES:
+HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
+
+----------------------------------------------------------------------------------------------------
+SECTION 3 – POWERFUL POWERSHELL COMMANDS
+----------------------------------------------------------------------------------------------------
+
+GET SYSTEM INFO:
+Get-ComputerInfo  
+
+LIST SERVICES:
+Get-Service  
+Get-Service | Where-Object {$_.Status -eq "Stopped"}
+
+NETWORK INFORMATION:
+Get-NetAdapter  
+Get-NetIPConfiguration  
+Test-NetConnection -Port 443
+
+DRIVERS:
+Get-WindowsDriver -Online
+
+CHECK INSTALLED SOFTWARE:
+Get-WmiObject -Class Win32_Product
+
+KILL PROCESS:
+Stop-Process -Id PID
+
+SHUTDOWN/RESTART:
+Restart-Computer  
+Stop-Computer
+
+----------------------------------------------------------------------------------------------------
+SECTION 4 – DISK & FILESYSTEM MANAGEMENT
+----------------------------------------------------------------------------------------------------
+
+DISK CHECK:
+chkdsk C: /f  
+
+DISK INFO:
+diskpart  
+list disk  
+select disk 0  
+detail disk  
+
+PARTITION ISSUES:
+bootrec /fixmbr  
+bootrec /fixboot  
+bootrec /scanos  
+bootrec /rebuildbcd
+
+CHECK STORAGE HEALTH:
+wmic diskdrive get status  
+PowerShell:  
+Get-PhysicalDisk | Select-Object HealthStatus
+
+----------------------------------------------------------------------------------------------------
+SECTION 5 – WINDOWS UPDATES & PATCHING
+----------------------------------------------------------------------------------------------------
+
+FORCE WINDOWS UPDATE:
+wuauclt /detectnow  
+wuauclt /updatenow
+
+PowerShell:
+Get-WindowsUpdateLog  
+Install-WindowsUpdate
+
+COMMON UPDATE ERRORS:
+0x80070002 → missing files  
+0x800f081f → missing .NET files  
+0x800705b4 → timeout  
+0x8024a105 → update stuck  
+
+FIXES:
+- Reset update components  
+- Clear SoftwareDistribution folder  
+- Run SFC/DISM  
+- Check services: BITS, Windows Update  
+
+RESET UPDATE SERVICES:
+net stop wuauserv  
+net stop bits  
+Delete: C:\Windows\SoftwareDistribution  
+net start wuauserv  
+net start bits  
+
+----------------------------------------------------------------------------------------------------
+SECTION 6 – SYSTEM FILE CORRUPTION & RECOVERY
+----------------------------------------------------------------------------------------------------
+
+SFC & DISM:
+sfc /scannow  
+DISM /Online /Cleanup-Image /RestoreHealth  
+
+PURPOSE:
+- Fix corrupted system files  
+- Restore missing components  
+- Repair update issues  
+
+WHEN TO RUN:
+- Apps crash  
+- Windows slow  
+- Start menu broken  
+- Updates fail  
+
+----------------------------------------------------------------------------------------------------
+SECTION 7 – PERFORMANCE TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+CHECK RESOURCE USAGE:
+taskmgr  
+Resource Monitor  
+Performance Monitor (perfmon)
+
+DISK USAGE 100% ISSUES:
+Causes:
+- Superfetch
+- Windows Search
+- Faulty drivers
+- HDD nearing failure
+
+Fix:
+- Disable SysMain temporarily  
+- Update drivers  
+- Run disk health check  
+
+MEMORY LEAK:
+Causes:
+- Chrome tabs  
+- Misbehaving apps  
+- Background services
+
+Fix:
+- Identify process via Task Manager  
+- Restart app/service  
+
+BOOT TIME SLOW:
+Check:
+- Startup apps  
+- Services  
+- Disk health  
+
+----------------------------------------------------------------------------------------------------
+SECTION 8 – DRIVERS & DEVICE MANAGER
+----------------------------------------------------------------------------------------------------
+
+DEVICE MANAGER:
+devmgmt.msc
+
+COMMON ISSUES:
+- Yellow exclamation mark → driver missing  
+- Code 43 → device failure  
+- Code 10 → cannot start device  
+
+DRIVER OPERATIONS:
+Update driver  
+Roll back driver  
+Disable/enable device  
+Uninstall device  
+
+DRIVER BACKUP:
+pnputil /export-driver * C:\DriverBackup
+
+----------------------------------------------------------------------------------------------------
+SECTION 9 – ADVANCED NETWORK TROUBLESHOOTING (WINDOWS)
+----------------------------------------------------------------------------------------------------
+
+CHECK NETWORK CONFIG:
+ipconfig /all  
+
+RELEASE/RENEW IP:
+ipconfig /release  
+ipconfig /renew  
+
+RESET TCP/IP STACK:
+netsh int ip reset  
+
+RESET WINSOCK:
+netsh winsock reset  
+
+DNS TROUBLESHOOTING:
+ipconfig /flushdns  
+nslookup domain.com  
+
+CHECK ROUTING:
+tracert google.com  
+pathping  
+
+CHECK PORTS:
+netstat -ano  
+
+----------------------------------------------------------------------------------------------------
+SECTION 10 – FIREWALL & SECURITY
+----------------------------------------------------------------------------------------------------
+
+WINDOWS FIREWALL:
+wf.msc
+
+ALLOW A PROGRAM:
+netsh advfirewall firewall add rule name="App" dir=in action=allow program="C:\app.exe" enable=yes
+
+DISABLE FIREWALL (TEMPORARY):
+netsh advfirewall set allprofiles state off
+
+CHECK FIREWALL RULES:
+netsh advfirewall firewall show rule name=all
+
+DEFENDER SCANS:
+MpCmdRun.exe -Scan -ScanType 1  
+MpCmdRun.exe -Scan -ScanType 2  
+
+----------------------------------------------------------------------------------------------------
+SECTION 11 – GROUP POLICY (GPO) TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+FORCE GPO UPDATE:
+gpupdate /force  
+
+CHECK APPLIED GPOs:
+gpresult /h report.html  
+
+COMMON GPO ISSUES:
+- User in wrong OU  
+- Replication not working  
+- GPO links disabled  
+- Slow link detection  
+
+SYMPTOMS:
+- Drive mappings not working  
+- Desktop backgrounds not applied  
+- Scripts not running  
+- Policies applying incorrectly  
+
+DEBUGGING:
+- Check SYSVOL replication  
+- Check DC event logs  
+- Check permissions on GPO objects  
+
+----------------------------------------------------------------------------------------------------
+SECTION 12 – WINDOWS BOOT TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+BOOTLOADER PROBLEMS:
+Use:
+bootrec /fixmbr  
+bootrec /fixboot  
+bootrec /rebuildbcd  
+
+STARTUP REPAIR:
+From WinRE (Recovery Environment)
+
+CHKDSK for disk issues:
+chkdsk /r  
+
+CHECK DRIVER ISSUES:
+Disable driver signature enforcement (advanced startup)
+
+SAFE MODE:
+msconfig  
+or  
+Shift + Restart → Troubleshoot → Advanced options → Startup Settings  
+
+----------------------------------------------------------------------------------------------------
+SECTION 13 – REMOTE DESKTOP (RDP) TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+RDP ERRORS:
+- CredSSP encryption oracle  
+- NLA authentication failed  
+- Port 3389 blocked  
+- Firewall disabled  
+
+CHECK RDP STATUS:
+System Properties → Remote  
+Or registry:
+HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server
+
+ENABLE RDP VIA COMMAND:
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f  
+
+CHECK RDP PORT:
+netstat -ano | findstr 3389  
+
+----------------------------------------------------------------------------------------------------
+SECTION 14 – WINDOWS TASK SCHEDULER
+----------------------------------------------------------------------------------------------------
+
+OPEN:
+taskschd.msc
+
+COMMON ISSUES:
+- Broken paths  
+- Deleted user accounts  
+- Corrupt XML task definitions  
+
+CHECK LAST RUN RESULT:
+0x0 → success  
+0x1 → general error  
+0x41301 → running  
+0x41303 → task waiting  
+
+----------------------------------------------------------------------------------------------------
+SECTION 15 – WINDOWS EVENT VIEWER (DETAILED)
+----------------------------------------------------------------------------------------------------
+
+OPEN:
+eventvwr.msc
+
+IMPORTANT LOGS:
+Application  
+System  
+Security  
+Setup  
+Microsoft-Windows-WindowsUpdateClient  
+
+FILTER BY ERROR:
+Custom Views → Administrative Events  
+
+COMMON ERROR CATEGORIES:
+- Disk errors  
+- Service crashes  
+- Permission failures  
+- Update failures  
+- Network failures  
+
+----------------------------------------------------------------------------------------------------
+SECTION 16 – WINDOWS REPAIR & RESET OPTIONS
+----------------------------------------------------------------------------------------------------
+
+DISM RESTORE HEALTH:
+DISM /Online /Cleanup-Image /RestoreHealth  
+
+RESET PC (Keeps files):
+Settings → Recovery → Reset this PC
+
+RESET PC (Remove everything):  
+Factory reset  
+
+RESTORE FROM SYSTEM IMAGE:
+Control Panel → Backup & Restore  
+
+----------------------------------------------------------------------------------------------------
+SECTION 17 – POWERSHELL REMOTING
+----------------------------------------------------------------------------------------------------
+
+ENABLE REMOTING:
+Enable-PSRemoting  
+
+EXECUTE COMMAND REMOTELY:
+Invoke-Command -ComputerName PC1 -ScriptBlock {Get-Service}  
+
+OPEN REMOTE SESSION:
+Enter-PSSession PC1  
+
+----------------------------------------------------------------------------------------------------
+SECTION 18 – TROUBLESHOOTING CHECKLIST (ADVANCED WINDOWS)
+----------------------------------------------------------------------------------------------------
+
+Always check:
+1. Event Viewer  
+2. Services  
+3. Network stack  
+4. Disk health  
+5. Drivers  
+6. Updates  
+7. Registry keys  
+8. GPOs  
+9. Antivirus logs  
+10. Windows activation status  
+
+----------------------------------------------------------------------------------------------------
+END OF FILE
+----------------------------------------------------------------------------------------------------

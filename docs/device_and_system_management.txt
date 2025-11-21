@@ -1,0 +1,416 @@
+DEVICE & SYSTEM MANAGEMENT – COMPLETE TECH SUPPORT KNOWLEDGE BASE
+
+INTRODUCTION
+Device & system management includes troubleshooting printers, network drives, shared folders, remote desktop tools (RDP, VNC, TeamViewer, AnyDesk), driver installation, and system imaging. These are the day-to-day tasks every IT support technician must master.
+
+This guide focuses only on real-world, practical solutions that work in enterprise environments.
+
+----------------------------------------------------------------------------------------------------
+SECTION 1 – PRINTER SETUP & TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+COMMON PRINTER ISSUES
+1. Printer not detected.
+2. Printer offline.
+3. Print queue stuck.
+4. Slow printing.
+5. Incorrect drivers.
+6. Network printer not appearing.
+7. Permission denied when printing.
+
+BASIC TROUBLESHOOTING WORKFLOW
+
+STEP 1 – CHECK CONNECTIVITY
+- For USB printers: check cable, try different USB port.
+- For network printers:
+  - Ping the printer's IP.
+  - Access Web Interface via browser.
+
+STEP 2 – CLEAR PRINT SPOOLER
+Commands (run as admin):
+   net stop spooler
+   del /q C:\Windows\System32\spool\PRINTERS\*
+   net start spooler
+
+This fixes 70% of “queue stuck” issues.
+
+STEP 3 – INSTALL / REINSTALL DRIVERS
+- Always use manufacturer drivers (HP, Canon, Epson, Brother).
+- Avoid “Microsoft IPP Class Driver”.
+
+STEP 4 – ADD NETWORK PRINTER MANUALLY
+Control Panel → Devices & Printers → Add a Printer → “The printer that I want isn’t listed” → Add by IP.
+
+STEP 5 – CHECK PERMISSIONS
+If shared printer:
+- User must be in the correct AD security group.
+- Printer share must allow “Print” permission.
+
+STEP 6 – PRINTER DEPLOYMENT VIA GROUP POLICY
+Check in:
+  \\domain\netlogon\
+  Group Policy → User Config → Preferences → Printers
+
+If printer does NOT show:
+- Run: gpupdate /force
+- Check GroupPolicy event logs.
+
+COMMON FIXES
+- Restart Print Spooler.
+- Reset TCP/IP port.
+- Remove the printer and re-add.
+- Update firmware (for enterprise printers).
+
+----------------------------------------------------------------------------------------------------
+SECTION 2 – NETWORK DRIVES & SHARED FOLDERS
+----------------------------------------------------------------------------------------------------
+
+COMMON ISSUES
+- Drive not mapping.
+- Access denied.
+- Constant credential pop-ups.
+- Slow access to shared folder.
+- Offline files conflict.
+
+STEP 1 – TEST CONNECTIVITY
+Ping the server:
+   ping FILESERVER01
+
+Test share manually:
+   \\FILESERVER01\SHARENAME
+
+STEP 2 – CHECK PERMISSIONS
+Two levels of permissions:
+
+1. Share permissions → “Everyone” or “Domain Users”
+2. NTFS permissions → controls actual access
+
+Effective permission = Minimum of both.
+
+STEP 3 – CHECK USER GROUP MEMBERSHIP
+If user should access:
+- Add them to proper security group.
+- Run: gpupdate /force
+
+STEP 4 – FIX MAPPED DRIVE ISSUES
+If drive not mapping:
+- Remove old cached credentials:
+   control keymgr.dll
+- Delete under Windows Credentials.
+
+STEP 5 – SCRIPTED DRIVES VIA GPO
+Check:
+gpresult /r  
+Group Policy → User → Preferences → Drive Maps
+
+STEP 6 – OFFLINE FILES PROBLEMS
+Disable Offline Files:
+Control Panel → Sync Center → Manage Offline Files → Disable
+
+----------------------------------------------------------------------------------------------------
+SECTION 3 – REMOTE DESKTOP PROTOCOL (RDP)
+----------------------------------------------------------------------------------------------------
+
+COMMON RDP ERRORS
+- “Remote Desktop can’t connect…”
+- Black screen after connecting.
+- CredSSP authentication error.
+- NLA (Network Level Authentication) issues.
+- RDP works internally but not externally.
+- Printer redirection not working.
+
+REQUIRED SETTINGS
+1. Remote Desktop enabled:
+   System Properties → Remote
+
+2. Firewall Rule enabled:
+   Port 3389 inbound.
+
+3. User must be in:
+   Remote Desktop Users group
+
+4. Check if NLA is blocking access:
+   Disable temporarily:
+   System Properties → Remote → Uncheck NLA.
+
+TROUBLESHOOTING COMMANDS
+Check if port open:
+   netstat -a | find "3389"
+
+Test connectivity:
+   telnet SERVER 3389
+
+Reset RDP service:
+   net stop termservice
+   net start termservice
+
+FIX BLACK SCREEN
+- Disable hardware acceleration.
+- Update GPU drivers.
+- Kill hanging explorer.exe session remotely.
+
+----------------------------------------------------------------------------------------------------
+SECTION 4 – TEAMVIEWER, ANYDESK & VNC
+----------------------------------------------------------------------------------------------------
+
+TEAMVIEWER ISSUES
+- Partner not connecting.
+- Commercial use detected.
+- Remote input disabled.
+
+FIXES
+1. Check TeamViewer Service:
+   services.msc → TeamViewer → Start.
+
+2. Restart ID:
+   Quit TeamViewer → relaunch.
+
+3. Add to firewall exception.
+
+ANYDESK ISSUES
+- “Waiting for image”
+- No incoming connection
+- Remote desktop shows black screen
+- Permissions blocked
+
+FIXES
+1. Enable unattended access.
+2. Give full device permissions.
+3. Start AnyDesk service.
+4. Update graphics driver.
+
+VNC ISSUES
+- Authentication failed.
+- No encryption.
+- Slow connection.
+
+FIXES
+- Set password via server settings.
+- Use encrypted VNC variant (TightVNC, RealVNC).
+- Ensure port 5900 is open.
+
+----------------------------------------------------------------------------------------------------
+SECTION 5 – DRIVER INSTALLATION & CONFIGURATION
+----------------------------------------------------------------------------------------------------
+
+COMMON DRIVER ISSUES
+- Yellow warning sign in Device Manager.
+- Device not recognized.
+- Code 10 / Code 43 errors.
+- WiFi adapter not working.
+- Audio device missing.
+
+STEP 1 – CHECK DEVICE MANAGER
+- Unknown device → missing driver.
+- Update driver manually.
+
+STEP 2 – USE MANUFACTURER DRIVERS
+- Dell SupportAssist
+- HP Support Assistant
+- Lenovo Vantage
+
+STEP 3 – CLEAN INSTALL GPU DRIVERS
+Use DDU in Safe Mode.
+
+STEP 4 – FIX SOUND ISSUES
+- Restart “Windows Audio” service.
+- Reinstall Realtek driver.
+- Disable “Audio Enhancements”.
+
+STEP 5 – FIX WIFI ISSUES
+1. Reinstall WiFi driver.
+2. Reset network:
+   netsh winsock reset
+   netsh int ip reset
+3. Disable “Allow system to turn off device to save power”.
+
+STEP 6 – USB DEVICE NOT DETECTED
+- Try different port.
+- Reinstall USB controller drivers.
+- Disable USB selective suspend.
+
+----------------------------------------------------------------------------------------------------
+SECTION 6 – IMAGING & CLONING SYSTEMS
+----------------------------------------------------------------------------------------------------
+
+IMAGING BASICS
+Imaging is used to deploy the same OS configuration across multiple computers.
+
+TOOLS
+- Clonezilla
+- Macrium Reflect
+- Acronis True Image
+- PXE network boot system
+
+USES
+- Deploying new PCs
+- Resetting lab machines
+- Standard enterprise build
+
+IMAGE TYPES
+1. Full Image – OS + drivers + apps
+2. Incremental Image – only changes saved
+3. Differential Image – snapshot since full backup
+
+BEST PRACTICES
+- Sysprep Windows before imaging.
+- Store images on network share.
+- Verify checksum after cloning.
+
+----------------------------------------------------------------------------------------------------
+SECTION 7 – DISK MANAGEMENT & SYSTEM PARTITIONS
+----------------------------------------------------------------------------------------------------
+
+COMMON TASKS
+- Extend volume.
+- Shrink volume.
+- Convert MBR to GPT.
+- Repair bootloader.
+
+COMMANDS
+Check disks:
+   diskpart
+   list disk
+   list volume
+
+Convert MBR → GPT (Windows 10+):
+   mbr2gpt /convert /allowfullOS
+
+Repair bootloader:
+   bootrec /fixmbr
+   bootrec /fixboot
+   bootrec /scanos
+   bootrec /rebuildbcd
+
+----------------------------------------------------------------------------------------------------
+SECTION 8 – SYSTEM SERVICES MANAGEMENT
+----------------------------------------------------------------------------------------------------
+
+IMPORTANT SERVICES
+- Print Spooler
+- Windows Update
+- DNS Client
+- DHCP Client
+- Remote Desktop Services
+- Windows Audio
+- Workstation
+- Server service (must be running for shared folders)
+- SSDP Discovery
+- Wired AutoConfig
+- WLAN AutoConfig
+
+COMMON FIXES
+Restart a service:
+   services.msc  
+or using CMD:
+   net stop SERVICE  
+   net start SERVICE
+
+----------------------------------------------------------------------------------------------------
+SECTION 9 – USER PROFILE & SYNC ISSUES
+----------------------------------------------------------------------------------------------------
+
+SYMPTOMS
+- Slow login.
+- Temporary profile loaded.
+- Desktop icons missing.
+- Corrupt NTUSER.DAT.
+
+FIX
+1. Backup user data.
+2. Delete old profile folder.
+3. Delete profile registry entry:
+   HKLM\Software\Microsoft\Windows NT\CurrentVersion\ProfileList
+4. Re-login to create fresh profile.
+
+----------------------------------------------------------------------------------------------------
+SECTION 10 – SYSTEM PERFORMANCE & MAINTENANCE
+----------------------------------------------------------------------------------------------------
+
+COMMON PERFORMANCE ISSUES
+- 100% disk usage.
+- System freezes.
+- High CPU usage from Windows Update.
+- Startup apps slowing down boot.
+
+FIX STEPS
+1. Disable unnecessary startup apps.
+2. Restart SysMain service.
+3. Reset Windows Search index.
+4. Disable background apps.
+5. Update drivers.
+6. Scan for malware.
+7. Check disk health:
+   wmic diskdrive get status
+
+----------------------------------------------------------------------------------------------------
+SECTION 11 – REMOTE MANAGEMENT BASICS
+----------------------------------------------------------------------------------------------------
+
+WINDOWS REMOTE TOOLS
+1. MMC (Computer Management)
+2. PSExec
+3. Remote Registry
+4. PowerShell Remoting
+
+ENABLE POWERSHELL REMOTING
+   Enable-PSRemoting –Force
+
+CHECK REMOTE SESSIONS
+   qwinsta  
+   rwinsta SESSIONID
+
+----------------------------------------------------------------------------------------------------
+SECTION 12 – WIFI, LAN & BLUETOOTH DEVICE MANAGEMENT
+----------------------------------------------------------------------------------------------------
+
+WIFI ISSUES
+- No networks found.
+- Limited connectivity.
+- Very slow wifi.
+
+FIXES
+1. Update WiFi driver.
+2. Reset network:
+   netsh int ip reset
+3. Change WiFi channel.
+4. Move closer to router.
+
+LAN ISSUES
+- Unidentified network.
+- No internet.
+
+FIXES
+1. Disable/enable LAN adapter.
+2. Reset gateway.
+3. Replace Ethernet cable.
+
+BLUETOOTH ISSUES
+- Cannot pair devices.
+- Audio lag.
+
+FIXES
+1. Update Bluetooth driver.
+2. Remove device and re-add.
+3. Restart Bluetooth Support Service.
+
+----------------------------------------------------------------------------------------------------
+SECTION 13 – SYSTEM BACKUP & RESTORE
+----------------------------------------------------------------------------------------------------
+
+SYSTEM RESTORE
+- Useful for undoing bad updates or drivers.
+
+Create restore point:
+   SystemPropertiesProtection.exe
+
+Backup options:
+- File History
+- OneDrive backup
+- Local image backup
+
+If system is unstable → restore to last working point.
+
+----------------------------------------------------------------------------------------------------
+END OF FILE
+----------------------------------------------------------------------------------------------------

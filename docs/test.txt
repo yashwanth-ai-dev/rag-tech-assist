@@ -1,0 +1,4 @@
+How to fix Windows password reset issues:
+1. Open CMD as admin.
+2. Use net user commands.
+3. Troubleshoot with WinRE.

@@ -1,0 +1,393 @@
+SOFTWARE TROUBLESHOOTING – COMPLETE PROFESSIONAL KNOWLEDGE BASE
+
+INTRODUCTION
+Software problems range from slow performance to missing DLL errors, corrupt system files, application crashes, update failures, driver conflicts, and OS instability. A good technician must isolate whether the issue comes from the application itself, system configuration, OS-level corruption, misbehaving background processes, or user-specific profile problems.
+
+This document explains a complete, production-grade troubleshooting approach for Windows, Linux, and general desktop applications. It covers browsers, firewalls, updates, drivers, installations, OS corruption, antivirus conflicts, and fundamental debugging strategies.
+
+----------------------------------------------------------------------------------------------------
+SECTION 1 – WINDOWS SYSTEM CORRUPTION
+----------------------------------------------------------------------------------------------------
+
+COMMON SYMPTOMS
+- Slow boot time.
+- Random freezes.
+- Explorer crashes.
+- “DLL missing” errors.
+- Apps not opening.
+- Windows Update failing.
+- Start menu/Search not responding.
+
+CRITICAL REPAIR COMMANDS (RUN AS ADMIN)
+
+1. System File Checker (SFC)
+   sfc /scannow  
+   Repairs or replaces corrupt system files.
+
+2. DISM (Deployment Image Servicing and Management)
+   DISM /Online /Cleanup-Image /RestoreHealth  
+   Repairs the Windows component store.
+
+3. DISM alternative sequence:
+   DISM /Online /Cleanup-Image /ScanHealth  
+   DISM /Online /Cleanup-Image /CheckHealth  
+
+If SFC repeatedly fails → DISM first, then SFC again.
+
+4. CHKDSK (Filesystem repair)
+   chkdsk C: /f /r  
+   Fixes filesystem corruption, but requires restart.
+
+WHEN TO USE EACH
+- SFC → system file corruption.
+- DISM → underlying OS component damage.
+- CHKDSK → drive-level logical errors.
+
+----------------------------------------------------------------------------------------------------
+SECTION 2 – WINDOWS UPDATE TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+SYMPTOMS
+- Updates stuck at 0% or 100%.
+- Downloading forever.
+- Update failed error codes (0x80070003, 0x800f0988, etc.)
+- Windows cannot complete installation.
+
+FIX STEPS
+1. Restart Windows Update services:
+   net stop wuauserv  
+   net stop cryptSvc  
+   net stop bits  
+   net stop msiserver  
+   Delete:
+     C:\Windows\SoftwareDistribution\  
+     C:\Windows\System32\catroot2\  
+   Restart:
+   net start wuauserv  
+   net start cryptSvc  
+   net start bits  
+   net start msiserver  
+
+2. Run troubleshooter:
+   Settings → Update → Troubleshooter.
+
+3. Ensure date/time settings are correct.
+
+4. Check disk space (minimum 10 GB).
+
+5. Disable VPN (can block update servers).
+
+6. Run DISM + SFC.
+
+7. Update via Windows Update Assistant if built-in fails.
+
+----------------------------------------------------------------------------------------------------
+SECTION 3 – DRIVER TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+SYMPTOMS OF DRIVER PROBLEMS
+- BSOD related to ntoskrnl.exe, nvlddmkm.sys, atikmdag.sys.
+- Black screen after updating GPU driver.
+- Audio crackling.
+- WiFi disconnecting randomly.
+- Touchpad/keyboard not responding.
+
+DRIVER FIX STEPS
+1. Reinstall problematic driver from official manufacturer.
+2. For GPUs, use Display Driver Uninstaller (DDU) in Safe Mode.
+3. Avoid Windows Update auto-drivers for GPU/WiFi.
+4. Check Device Manager for:
+   - Yellow exclamation marks
+   - Unknown device
+5. Roll back driver:
+   Device Manager → Properties → Driver → Roll back.
+6. For WiFi:
+   - Disable “Power saving mode”
+   - Reset network stack:
+     netsh winsock reset  
+     netsh int ip reset  
+
+----------------------------------------------------------------------------------------------------
+SECTION 4 – APPLICATION CRASHING / NOT OPENING
+----------------------------------------------------------------------------------------------------
+
+COMMON CAUSES
+- Missing DLLs.
+- Corrupt installation.
+- Broken registry entries.
+- Permission issues.
+- Conflicting background services.
+- Outdated Runtime Libraries (VC++ / .NET / DirectX).
+- Antivirus blocking application.
+
+FIX STEPS
+1. Run as administrator.
+2. Reinstall application completely.
+3. Delete app data:
+   %AppData%, %LocalAppData%
+4. Install latest Microsoft Visual C++ Redistributables (x86 + x64).
+5. Install .NET Framework 4.8+.
+6. Install DirectX Runtime (June 2010).
+7. Disable third-party antivirus temporarily.
+8. Check Event Viewer:
+   Windows Logs → Application → Error.
+
+----------------------------------------------------------------------------------------------------
+SECTION 5 – BOOT PROBLEMS / OS NOT LOADING
+----------------------------------------------------------------------------------------------------
+
+SYMPTOMS
+- Automatic Repair loop.
+- INACCESSIBLE_BOOT_DEVICE BSOD.
+- Black screen after login.
+- Stuck on spinning dots.
+
+FIXES
+1. Boot into Safe Mode.
+2. Run:
+   bootrec /fixmbr  
+   bootrec /fixboot  
+   bootrec /scanos  
+   bootrec /rebuildbcd  
+
+3. Disable Fast Startup.
+4. Remove recent updates (if update caused boot failure).
+5. Update BIOS.
+6. Disconnect external devices (they interrupt boot sometimes).
+
+----------------------------------------------------------------------------------------------------
+SECTION 6 – NETWORK & INTERNET SOFTWARE TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+SYMPTOMS
+- Slow internet.
+- DNS errors.
+- Apps cannot connect online.
+- Browser not loading pages.
+- WiFi drops randomly.
+
+FIX COMMANDS (WINDOWS)
+1. Reset IP stack:
+   netsh int ip reset
+
+2. Flush DNS:
+   ipconfig /flushdns
+
+3. Renew IP:
+   ipconfig /release  
+   ipconfig /renew
+
+4. Reset Winsock:
+   netsh winsock reset
+
+DNS FIXES
+- Use Google DNS:
+   8.8.8.8  
+   8.8.4.4  
+- Or Cloudflare DNS:
+   1.1.1.1  
+   1.0.0.1  
+
+BROWSER FIXES
+- Disable extensions.
+- Clear cache.
+- Reset browser settings.
+- Test in incognito mode.
+- Disable proxy/VPN.
+
+----------------------------------------------------------------------------------------------------
+SECTION 7 – FIREWALL & ANTIVIRUS TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+FIREWALL BLOCKING SYMPTOMS
+- Apps cannot connect online.
+- Downloads failing.
+- VPN not connecting.
+- Local network discovery broken.
+
+FIXES
+1. Temporarily disable firewall (test only).
+2. Allow app manually:
+   Control Panel → Firewall → Allow an app.
+3. Reset firewall:
+   netsh advfirewall reset
+4. Remove old firewall rules.
+
+ANTIVIRUS INTERFERENCE
+- Blocks installers.
+- Deletes DLLs.
+- Prevents updates.
+
+FIXES
+- Add exceptions to antivirus.
+- Uninstall third-party antivirus (Windows Defender is enough).
+- For enterprise devices: check endpoint policies.
+
+----------------------------------------------------------------------------------------------------
+SECTION 8 – PERFORMANCE TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+SYMPTOMS OF SLOW PC
+- High CPU usage.
+- High disk usage.
+- Background apps using resources.
+- Malware.
+- Corrupt user profile.
+
+CHECK TASK MANAGER FOR:
+- CPU spikes from unknown processes.
+- Disk usage stuck at 100%.
+- Memory leaks (apps using 5–10 GB RAM).
+- Startup apps slowing boot.
+
+FIX STEPS
+1. Disable startup apps.
+2. Uninstall bloatware.
+3. Turn off SysMain (if disk usage is stuck at 100% on HDD systems):
+   services.msc → SysMain → Disable
+4. Perform malware scan.
+5. Reset Windows Search Index.
+6. Increase virtual memory (pagefile).
+7. Defrag HDD (NOT SSD).
+8. Update drivers.
+
+----------------------------------------------------------------------------------------------------
+SECTION 9 – SOFTWARE INSTALLATION TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+COMMON INSTALLATION ERRORS
+- “Setup failed”
+- “Missing prerequisites”
+- “You do not have sufficient permissions”
+- “Installer corrupted”
+- “Unable to locate DLL”
+
+FIXES
+1. Run as Administrator.
+2. Disable antivirus.
+3. Use offline installer.
+4. Download Visual C++ Redistributables.
+5. Check disk space.
+6. Clear Temp folder:
+   %temp%
+7. Check Event Viewer for MSI installer logs.
+8. Use compatibility mode for older apps.
+
+----------------------------------------------------------------------------------------------------
+SECTION 10 – PROGRAM FREEZING OR NOT RESPONDING
+----------------------------------------------------------------------------------------------------
+
+CAUSES
+- Deadlocks.
+- High RAM usage.
+- Unresponsive UI thread.
+- Corrupted user profile.
+- Background process conflict.
+
+FIXES
+1. End task and relaunch.
+2. Check resource usage.
+3. Reset app settings.
+4. Clean reinstall.
+5. Delete AppData for that program.
+6. Create new Windows user account and test.
+7. Disable hardware acceleration in:
+   - Chrome
+   - Discord
+   - VSCode
+   - Browsers
+8. Update GPU drivers.
+
+----------------------------------------------------------------------------------------------------
+SECTION 11 – BROWSER TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+COMMON ISSUES
+- Slow loading pages.
+- Crashing tabs.
+- Video playback laggy.
+- DNS or proxy errors.
+
+FIXES
+1. Disable all extensions.
+2. Clear cache.
+3. Reset browser.
+4. Disable hardware acceleration.
+5. Update browser.
+6. Reset network settings.
+7. Check if antivirus is blocking connections.
+
+----------------------------------------------------------------------------------------------------
+SECTION 12 – LINUX TROUBLESHOOTING BASICS
+----------------------------------------------------------------------------------------------------
+
+COMMON COMMANDS
+1. System logs:
+   journalctl -xe  
+   dmesg
+
+2. Check disk:
+   df -h
+
+3. Check RAM swap usage:
+   free -h
+
+4. Restart network:
+   systemctl restart NetworkManager
+
+5. Fix broken packages (Debian/Ubuntu):
+   sudo apt --fix-broken install  
+   sudo dpkg --configure -a  
+
+6. Clear apt cache:
+   sudo apt clean  
+
+SOFTWARE CRASH LOGS
+- /var/log/syslog
+- /var/log/kern.log
+- Application-specific logs in /var/log/
+
+----------------------------------------------------------------------------------------------------
+SECTION 13 – GENERAL DEBUGGING METHODOLOGY
+----------------------------------------------------------------------------------------------------
+
+1. Identify exact symptoms.
+2. Reproduce issue consistently.
+3. Check logs (Event Viewer or Linux logs).
+4. Update the software.
+5. Reset local configuration.
+6. Check permissions.
+7. Remove conflicting apps.
+8. Check dependencies (.NET, VC++, Java).
+9. Reinstall cleanly.
+10. If issue persists → OS repair or profile reset.
+
+----------------------------------------------------------------------------------------------------
+SECTION 14 – USER PROFILE CORRUPTION
+----------------------------------------------------------------------------------------------------
+
+SYMPTOMS
+- Windows Search broken.
+- Start Menu not opening.
+- Apps crashing only for one user.
+- Explorer freezes.
+
+FIX
+1. Create new user:
+   net user newuser password /add
+2. Log in using new user → test.
+3. If fixed → old profile was corrupt.
+
+----------------------------------------------------------------------------------------------------
+SECTION 15 – RESETTING WINDOWS WITHOUT LOSING DATA
+----------------------------------------------------------------------------------------------------
+
+Steps:
+1. Settings → Update & Security → Recovery.
+2. Reset this PC → Keep my files.
+3. Removes apps but keeps personal data.
+4. Reinstall required apps afterward.
+
+----------------------------------------------------------------------------------------------------
+END OF FILE
+----------------------------------------------------------------------------------------------------

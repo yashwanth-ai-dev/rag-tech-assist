@@ -1,0 +1,416 @@
+SECURITY & THREAT HANDLING – COMPLETE KNOWLEDGE BASE FOR TECH SUPPORT
+
+INTRODUCTION
+Security issues are among the most critical problems a technician will handle. Threats include malware, ransomware, phishing attacks, malicious USB devices, compromised credentials, unpatched applications, insecure configurations, and social engineering. Good security troubleshooting requires a mix of awareness, technical skills, and strong judgment. This document covers everything a professional technician must know for investigating and resolving security threats.
+
+----------------------------------------------------------------------------------------------------
+SECTION 1 – TYPES OF SECURITY THREATS
+----------------------------------------------------------------------------------------------------
+
+1. Malware
+   - Software designed to harm systems.
+   - Includes viruses, worms, trojans, spyware, adware.
+
+2. Ransomware
+   - Encrypts files and demands payment.
+   - Extremely severe → requires immediate isolation.
+
+3. Spyware/Keyloggers
+   - Steals personal data, passwords, browsing activity.
+
+4. Rootkits
+   - Hides deep inside OS, very hard to detect.
+
+5. Phishing
+   - Fake emails/messages trick users into giving credentials.
+
+6. Social Engineering
+   - Human manipulation: “Your account is locked, send OTP…”
+
+7. Malicious USB Devices
+   - USB drives that auto-run malware.
+   - USB Killer → physically destroys hardware.
+
+8. Zero-Day Vulnerabilities
+   - Software flaws unknown to vendors and exploited in the wild.
+
+9. Network Attacks
+   - MITM (Man-in-the-Middle)
+   - Packet sniffing
+   - WiFi password cracking
+   - DNS spoofing
+
+10. Credential Attacks
+    - Password spraying
+    - Brute-force attempts
+    - Compromised passwords reused across sites
+
+----------------------------------------------------------------------------------------------------
+SECTION 2 – HOW TO DETECT A SECURITY PROBLEM
+----------------------------------------------------------------------------------------------------
+
+COMMON SIGNS OF INFECTION
+- System suddenly slow.
+- CPU at 100% without apps running.
+- Unknown background processes.
+- Browser pop-ups.
+- Antivirus disabled automatically.
+- Files encrypted or renamed.
+- Unknown software installed.
+- Users receiving OTPs they did not request.
+- Unauthorized login attempts (Microsoft/Google notifications).
+- Firewall turned off.
+- Sudden network traffic spikes.
+
+SYSTEM LOG SIGNS (EVENT VIEWER)
+- "Service Control Manager" warnings.
+- Unexpected services created.
+- Failed login attempts.
+- Suspicious scheduled tasks.
+- Unknown drivers loaded.
+
+NETWORK SIGNS
+- High outbound traffic.
+- Connections to unknown IPs.
+- Suspicious domain lookups.
+
+----------------------------------------------------------------------------------------------------
+SECTION 3 – MALWARE REMOVAL PROCESS (STANDARD)
+----------------------------------------------------------------------------------------------------
+
+STEP 1 – ISOLATE SYSTEM
+- Disconnect from WiFi/Ethernet.
+- Disable Bluetooth.
+- Remove USBs.
+- Prevent malware from spreading.
+
+STEP 2 – BOOT INTO SAFE MODE
+Run:
+   msconfig → Boot → Safe Mode  
+or  
+   Shift + Restart → Troubleshoot → Advanced Options → Startup Settings
+
+STEP 3 – REMOVE TEMPORARY FILES
+Clear:
+   %temp%
+   C:\Windows\Temp
+
+This speeds up scans.
+
+STEP 4 – RUN MULTIPLE SCANNERS
+Use at least 2 different tools:
+
+1. Microsoft Defender Full Scan
+2. Malwarebytes Full Scan
+3. ESET Online Scanner (optional)
+4. AdwCleaner (adware/spyware)
+
+STEP 5 – CHECK STARTUP ENTRIES
+   Task Manager → Startup  
+Look for unknown entries.
+
+STEP 6 – REMOVE SUSPICIOUS PROGRAMS
+Check:
+   Control Panel → Programs and Features
+
+STEP 7 – RESET BROWSERS
+- Remove unknown extensions.
+- Reset Chrome/Edge/Firefox.
+- Delete browser profiles if needed.
+
+STEP 8 – CHECK SCHEDULED TASKS
+   taskschd.msc  
+Look for:
+- “UpdateService”
+- “ChromeDriver”
+- Random filenames
+
+STEP 9 – CHECK SERVICES
+   services.msc  
+Disable suspicious services.
+
+STEP 10 – CHECK HOSTS FILE
+Location:
+   C:\Windows\System32\drivers\etc\hosts
+
+Remove malicious entries like:
+   127.0.0.1 antivirus.com
+
+STEP 11 – RESET NETWORK SETTINGS
+netsh winsock reset  
+netsh int ip reset  
+
+STEP 12 – UPDATE WINDOWS
+Security patches are essential.
+
+STEP 13 – RESTART & VERIFY SYSTEM CLEANLINESS
+- Run another malware scan.
+- Check logs and startup items again.
+
+----------------------------------------------------------------------------------------------------
+SECTION 4 – RANSOMWARE INCIDENT RESPONSE
+----------------------------------------------------------------------------------------------------
+
+WARNING: Ransomware is extremely destructive.
+
+IMMEDIATE ACTIONS
+1. Disconnect PC from network immediately.
+2. Photograph ransom note.
+3. Do NOT restart PC (can worsen encryption).
+4. Check file extensions:
+   - .locky
+   - .ryuk
+   - .zepto
+   - .conti
+   - .encrypted
+5. Identify ransomware family (ID-Ransomware website).
+
+DO NOT:
+- Pay ransom.
+- Delete encrypted files.
+- Attempt random decryptors.
+
+NEXT STEPS
+1. Boot into Safe Mode.
+2. Perform malware scans.
+3. Backup encrypted files.
+4. Restore from:
+   - Shadow copies (if not deleted)
+   - File History
+   - Previous backups
+
+If backed up → wipe system → reinstall Windows.
+
+----------------------------------------------------------------------------------------------------
+SECTION 5 – PHISHING & ONLINE ACCOUNT SECURITY
+----------------------------------------------------------------------------------------------------
+
+SIGNS OF PHISHING
+- Email asks for OTP/password.
+- Sender looks similar (support@micros0ft.com).
+- Links redirect to .xyz or .info domains.
+- Urgent tone: “Your account will be closed.”
+
+WHAT TO DO IF USER CLICKED LINK
+1. Do NOT enter password (if they have not).
+2. If already entered credentials → change password immediately.
+3. Enable 2FA on email/online accounts.
+4. Check login activity:
+   - Google: https://myaccount.google.com/security
+   - Microsoft: https://account.live.com/Activity
+
+5. Run malware scan (phishing sites sometimes drop malware).
+
+PASSWORD RULES FOR END USERS
+- Minimum 12–14 characters.
+- Use passphrases.
+- Never reuse passwords.
+- Store passwords in a manager (Bitwarden/1Password).
+
+----------------------------------------------------------------------------------------------------
+SECTION 6 – ANTIVIRUS & EDR (DEFENDER, CROWDSTRIKE) TROUBLESHOOTING
+----------------------------------------------------------------------------------------------------
+
+MICROSOFT DEFENDER TROUBLESHOOTING
+1. Ensure Defender is enabled:
+   Settings → Privacy & Security → Windows Security
+
+2. If disabled by malware:
+   Powershell as admin:
+   Set-MpPreference -DisableRealtimeMonitoring $false
+
+3. Update definitions:
+   "%ProgramFiles%\Windows Defender\MpCmdRun.exe" -SignatureUpdate
+
+4. Perform offline scan:
+   Windows Security → Virus & threat protection → Scan options → Offline Scan
+
+CROWDSTRIKE BASICS
+- CrowdStrike Falcon Sensor runs silently.
+- Detects suspicious behavior, not just signatures.
+- Alerts show in Falcon console.
+
+COMMON ISSUES
+- Blocked executables.
+- Slowed performance.
+- Blocked PowerShell scripts.
+
+FIXES
+- Add allow-list policy (admin only).
+- Temporarily disable protection (enterprise admin required).
+- Check detection logs.
+
+----------------------------------------------------------------------------------------------------
+SECTION 7 – SAFE HANDLING OF SUSPICIOUS USB DEVICES
+----------------------------------------------------------------------------------------------------
+
+RULES
+1. NEVER plug unknown USB devices into your machine.
+2. Use a test machine or isolated VM.
+3. Scan external drives before opening:
+   Right click → Scan with Microsoft Defender.
+
+USB KILLER WARNING
+- High-voltage device.
+- Instantly destroys USB ports/motherboard.
+- Often disguised as a normal pendrive.
+
+SIGNS A USB MIGHT BE MALICIOUS
+- Strange or unnecessary files.
+- Auto-run script.
+- Exe files named “Photos”, “Documents”, etc.
+- Shortcuts that open hidden executables.
+
+----------------------------------------------------------------------------------------------------
+SECTION 8 – WEB BROWSER SECURITY ISSUES
+----------------------------------------------------------------------------------------------------
+
+SYMPTOMS
+- Browser redirects.
+- Unknown extensions.
+- Search engine changed.
+- Pop-ups every few seconds.
+
+FIXES
+1. Reset browser completely.
+2. Remove unknown extensions.
+3. Clear browsing data.
+4. Disable suspicious add-ons.
+5. Check browser policies:
+   chrome://policy
+6. Disable hardware acceleration.
+7. Run malware scans.
+
+----------------------------------------------------------------------------------------------------
+SECTION 9 – FIREWALL & NETWORK SECURITY
+----------------------------------------------------------------------------------------------------
+
+FIREWALL RULES TROUBLESHOOTING
+- If app cannot access internet:
+  - Check firewall inbound/outbound rules.
+  - Allow the executable manually.
+  - Reset firewall:
+    netsh advfirewall reset
+
+BLOCKED PORTS
+Common required ports:
+- 80, 443 → Web traffic
+- 53 → DNS
+- 3389 → RDP
+- 445 → SMB
+- 22 → SSH
+
+If ports are blocked:
+- Check router firewall.
+- Check Windows firewall.
+- Check 3rd-party antivirus firewall.
+
+----------------------------------------------------------------------------------------------------
+SECTION 10 – VPN SECURITY ISSUES
+----------------------------------------------------------------------------------------------------
+
+VPN BREAKING INTERNET
+- DNS leak protection blocking requests.
+- Firewall blocking VPN tunnel.
+- Incorrect protocol (OpenVPN vs WireGuard).
+- Split tunneling misconfigured.
+
+FIXES
+1. Restart VPN client.
+2. Change server.
+3. Disable Kill Switch temporarily.
+4. Reset network:
+   netsh int ip reset  
+   ipconfig /flushdns  
+5. Reinstall VPN app.
+
+----------------------------------------------------------------------------------------------------
+SECTION 11 – EMAIL SECURITY
+----------------------------------------------------------------------------------------------------
+
+COMMON SECURITY INCIDENTS
+- Unexpected OTP messages.
+- Login alerts from unknown devices.
+- Compromised Outlook/Office 365 accounts.
+
+FIX STEPS
+1. Change email password immediately.
+2. Enable MFA.
+3. Review login sessions.
+4. Remove suspicious inbox rules:
+   Outlook → Rules → Manage rules.
+5. Run malware scan.
+
+EMAIL RULE BACKDOORS
+Attackers create auto-forward rules, such as:
+- “Forward all mail to attacker@example.com”
+- “Delete all incoming OTP messages”
+
+Always check for these after compromise.
+
+----------------------------------------------------------------------------------------------------
+SECTION 12 – IDENTIFYING A COMPROMISED DEVICE
+----------------------------------------------------------------------------------------------------
+
+RED FLAGS
+- Antivirus cannot open.
+- Security Center disabled.
+- Unknown processes running (e.g., “svhost.exe” instead of “svchost.exe”).
+- CPU spikes to 100% in idle.
+- Browser injects ads.
+- New admin accounts created.
+
+CONFIRMATION STEPS
+1. Check Task Manager.
+2. Check Services.
+3. Check startup apps.
+4. Check hosts file.
+5. Run SFC/DISM.
+6. Run malware scan.
+7. Check logs.
+
+----------------------------------------------------------------------------------------------------
+SECTION 13 – SECURITY BEST PRACTICES FOR USERS
+----------------------------------------------------------------------------------------------------
+
+1. Keep Windows updated.
+2. Use strong passwords.
+3. Enable Multi-Factor Authentication.
+4. Avoid downloading cracked software.
+5. Do not open unknown email attachments.
+6. Never share OTP with anyone.
+7. Backup important data regularly.
+8. Avoid public WiFi for sensitive logins.
+9. Check website URLs before logging in.
+
+----------------------------------------------------------------------------------------------------
+SECTION 14 – ENTERPRISE SECURITY PRACTICES
+----------------------------------------------------------------------------------------------------
+
+1. Enforce password policies.
+2. Use centralized EDR (CrowdStrike/Defender for Endpoint).
+3. Enforce disk encryption (BitLocker).
+4. Use firewall with logging.
+5. Block unauthorized USB storage.
+6. Segment network (VLAN).
+7. Apply security patches regularly.
+8. Monitor logs.
+9. Enforce VPN for remote workers.
+
+----------------------------------------------------------------------------------------------------
+SECTION 15 – INCIDENT RESPONSE WORKFLOW
+----------------------------------------------------------------------------------------------------
+
+1. Identify the incident.
+2. Contain immediately.
+3. Collect evidence (screenshots, logs, event IDs).
+4. Remove threat (scanning, manual removal).
+5. Patch vulnerabilities.
+6. Reset passwords if required.
+7. Restore data.
+8. Monitor system.
+9. Educate user on preventing future incidents.
+
+----------------------------------------------------------------------------------------------------
+END OF FILE
+----------------------------------------------------------------------------------------------------

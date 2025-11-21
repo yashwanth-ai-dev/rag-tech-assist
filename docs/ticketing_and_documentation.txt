@@ -1,0 +1,310 @@
+TICKETING SYSTEMS & DOCUMENTATION – COMPLETE IT SUPPORT KNOWLEDGE BASE
+
+INTRODUCTION
+Ticketing systems are the central workflow tools for IT support. Everything must be logged, tracked, escalated, resolved, and documented properly. This file covers how real enterprise ticketing systems work (Jira, ServiceNow, Freshdesk, Zendesk) and the exact best practices for tickets, SLAs, escalation, and resolution notes.
+
+----------------------------------------------------------------------------------------------------
+SECTION 1 – PURPOSE OF A TICKETING SYSTEM
+----------------------------------------------------------------------------------------------------
+
+Ticketing systems help IT technicians:
+- Track issues from start to finish.
+- Maintain accountability and audit trails.
+- Communicate with users.
+- Meet SLA requirements.
+- Document solutions for future reference.
+- Escalate issues to higher teams.
+- Prevent repeated work by storing knowledge.
+
+Every issue MUST have a ticket—even if solved instantly.
+
+----------------------------------------------------------------------------------------------------
+SECTION 2 – COMMON TICKETING PLATFORMS
+----------------------------------------------------------------------------------------------------
+
+1. JIRA SERVICE MANAGEMENT
+- Used widely in development & IT.
+- Excellent for workflows and automation.
+- Supports custom fields, forms, and dashboards.
+
+2. SERVICENOW
+- Enterprise-grade ITSM platform.
+- Heavy use in corporate environments.
+- Handles incidents, problems, changes, assets.
+
+3. FRESHDESK
+- Lightweight, easy to use.
+- Great for small and medium businesses.
+
+4. ZENDESK
+- Popular for helpdesk + customer service.
+- Strong email integration.
+
+All platforms have the same fundamentals:
+- Tickets
+- Statuses
+- Priority
+- Assignee
+- Comments
+- SLA timers
+- Escalation workflows
+
+----------------------------------------------------------------------------------------------------
+SECTION 3 – TICKET LIFECYCLE (REAL-WORLD)
+----------------------------------------------------------------------------------------------------
+
+1. **New**
+   - User created the ticket.
+   - No technician assigned yet.
+
+2. **Assigned / In Progress**
+   - Technician takes ownership.
+   - Starts diagnosis.
+
+3. **On Hold / Waiting for User**
+   - Waiting for response from:
+     - User
+     - Vendor
+     - Another team
+
+4. **Escalated**
+   - Sent to higher-level team (L2/L3, infrastructure, network, security).
+
+5. **Resolved**
+   - Issue fixed.
+   - Solution documented.
+
+6. **Closed**
+   - User confirms resolution or auto-closes after X days.
+
+----------------------------------------------------------------------------------------------------
+SECTION 4 – SLA (SERVICE LEVEL AGREEMENT)
+----------------------------------------------------------------------------------------------------
+
+SLA defines:
+- How fast you must *respond*.
+- How fast you must *resolve*.
+
+Typical SLA tiers:
+1. P1 – Critical  
+   Examples: system down, major outage.  
+   Response: 15 minutes  
+   Resolution: 4 hours
+
+2. P2 – High  
+   Examples: business-impacting issues.  
+   Response: 1 hour  
+   Resolution: 8 hours
+
+3. P3 – Medium  
+   Examples: normal issues (printer issues, software errors).  
+   Response: 4 hours  
+   Resolution: 24–48 hours
+
+4. P4 – Low  
+   Examples: general requests, password changes, access requests.  
+   Response: 1 day  
+   Resolution: 3–5 days
+
+IF YOU MISS SLA → Ticket is flagged, team gets penalized, and report shows failure.
+
+----------------------------------------------------------------------------------------------------
+SECTION 5 – HOW TO WRITE A GOOD TICKET
+----------------------------------------------------------------------------------------------------
+
+A good ticket must include:
+- What the problem is.
+- When it started.
+- Steps user already tried.
+- Error messages.
+- Affected system.
+- Impact on business.
+- Attachments: screenshots, logs.
+
+BAD TICKET EXAMPLE:
+"Internet not working."
+
+GOOD TICKET EXAMPLE:
+"User reports no internet on laptop since 9 AM. WiFi shows ‘Connected, no internet’. Tried reconnecting, rebooting router, and clearing DNS. Other devices working fine. Occurs only on LAN interface."
+
+----------------------------------------------------------------------------------------------------
+SECTION 6 – HOW TO COMMUNICATE INSIDE A TICKET
+----------------------------------------------------------------------------------------------------
+
+Follow these rules:
+
+RULE 1 – Never blame the user.  
+RULE 2 – Write clearly and professionally.  
+RULE 3 – Always mention what you did.  
+RULE 4 – Always ask for missing info.  
+RULE 5 – Keep timestamps clear.
+
+GOOD COMMENT EXAMPLES:
+- “Restarted print spooler service; user confirming test print success.”
+- “Requested screenshot of error message to proceed.”
+- “Waiting on network team to check firewall rules.”
+
+BAD COMMENT EXAMPLES:
+- “Fixed.”
+- “User problem.”
+- “Works on my machine.”
+
+----------------------------------------------------------------------------------------------------
+SECTION 7 – ESCALATION WORKFLOW (REAL WORLD)
+----------------------------------------------------------------------------------------------------
+
+You escalate when:
+- Issue requires admin/root access.
+- Issue ties to servers, network gear, or firewalls.
+- Issue is outside your scope.
+- You tried basic troubleshooting and problem persists.
+
+Escalate to:
+- L2 Support (OS/AD specialists)
+- Network team
+- Security team
+- Sysadmin team
+
+When escalating, ALWAYS include:
+1. Steps already taken.
+2. Logs collected.
+3. Error screenshots.
+4. User impact.
+5. Your suspicion of root cause (if any).
+
+----------------------------------------------------------------------------------------------------
+SECTION 8 – DOCUMENTATION BEST PRACTICES
+----------------------------------------------------------------------------------------------------
+
+The best technicians document EVERYTHING because:
+- Others can follow your steps.
+- You don’t get blamed for missing work.
+- Helps future troubleshooting.
+
+GOOD DOCUMENTATION SHOULD INCLUDE:
+1. Problem summary
+2. Troubleshooting steps
+3. Commands used
+4. What fixed the issue
+5. Recommendations to user
+6. Preventive steps
+
+EXAMPLE RESOLUTION NOTE:
+"Issue: User unable to print due to stuck spooler queue.  
+Action: Cleared spooler (\PRINTERS folder), restarted service, installed updated HP driver.  
+Result: Printing restored.  
+Recommendation: User advised to avoid sending print jobs via Wi-Fi on low signal."
+
+----------------------------------------------------------------------------------------------------
+SECTION 9 – ACCESS REQUEST TICKETS
+----------------------------------------------------------------------------------------------------
+
+Access requests must always include:
+- What access is needed (read/write/modify/admin).
+- Which resource (folder, app, finance share).
+- Approval from manager.
+- Justification.
+
+Never give access without approvals.  
+Never add user to “Domain Admins” or privileged groups.
+
+----------------------------------------------------------------------------------------------------
+SECTION 10 – PASSWORD RESET TICKETS
+----------------------------------------------------------------------------------------------------
+
+PROCESS
+1. Verify identity of user.  
+2. Reset password in AD.  
+3. Ensure “User must change password at next login” is checked.  
+4. Document the reset.  
+5. Never share password in ticket → send via approved method.
+
+----------------------------------------------------------------------------------------------------
+SECTION 11 – CHANGE MANAGEMENT TICKETS
+----------------------------------------------------------------------------------------------------
+
+Used in enterprise environments when modifying:
+- Servers
+- Network gear
+- Firewalls
+- Production systems
+
+Every change requires:
+- Documentation
+- Approval
+- Testing plan
+- Rollback plan
+- Scheduled downtime
+
+----------------------------------------------------------------------------------------------------
+SECTION 12 – PROBLEM VS INCIDENT TICKETS
+----------------------------------------------------------------------------------------------------
+
+INCIDENT
+- A single issue that impacts a user or service.
+- Example: “User cannot log in.”
+
+PROBLEM
+- A recurring underlying issue.
+- Example: “Multiple users cannot log in due to DC replication lag.”
+
+PROBLEM tickets aim to fix the ROOT CAUSE.
+
+----------------------------------------------------------------------------------------------------
+SECTION 13 – HOW TO PRIORITIZE TICKETS
+----------------------------------------------------------------------------------------------------
+
+Use these criteria:
+
+1. Impact  
+   - How many users affected?
+
+2. Urgency  
+   - Does it stop business operations?
+
+3. SLA requirements  
+   - Higher priority → faster response.
+
+Example priority calculation:
+- Printer down in IT office → P3
+- Printer down in finance dept on payday → P1
+
+----------------------------------------------------------------------------------------------------
+SECTION 14 – COMMON TICKET STATUS MEANINGS
+----------------------------------------------------------------------------------------------------
+
+**Open** – Ticket created.  
+**In Progress** – Technician working.  
+**Pending User** – Waiting for input from user.  
+**Pending Vendor** – Waiting for external company.  
+**Escalated** – Sent to next-level team.  
+**Resolved** – Fix provided.  
+**Closed** – Confirmed by user or auto-closed.
+
+----------------------------------------------------------------------------------------------------
+SECTION 15 – CHECKING LOGS INSIDE A TICKET
+----------------------------------------------------------------------------------------------------
+
+Technicians must attach logs such as:
+
+WINDOWS LOGS
+- Event Viewer export
+- SFC logs (CBS.log)
+- Windows Update logs
+- Application crash logs
+
+NETWORK LOGS
+- Ping/tracert results
+- nslookup records
+- Router firewall logs
+
+APPLICATION LOGS
+- Error codes
+- Stack traces
+- Crash reports
+
+These help escalated teams diagnose issues fast.
+
+----------------------------------------------------------------------------------------------------
+END OF FILE
+----------------------------------------------------------------------------------------------------

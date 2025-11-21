@@ -1,0 +1,62 @@
+NETWORKING ESSENTIALS
+
+IP ADDRESSING
+- IPv4 uses format x.x.x.x (0-255).
+- Subnet mask determines the network and host portions.
+- Default gateway is the router IP.
+- Use "ipconfig" (Windows) or "ip a" (Linux) to view network info.
+
+DNS BASICS
+- DNS converts domain names (google.com) to IP addresses.
+- If DNS fails, websites will not load, but pinging 8.8.8.8 might still work.
+- Commands:
+  - nslookup <domain>
+  - ipconfig /flushdns
+  - systemd-resolve --flush-caches
+
+DHCP BASICS
+- DHCP automatically assigns IP, subnet, and gateway.
+- If DHCP is down, system gets APIPA (169.254.x.x).
+
+TROUBLESHOOT SLOW OR NO INTERNET
+1. Restart router.
+2. Test with LAN cable.
+3. Disable/enable adapter.
+4. Update WiFi/LAN drivers.
+5. Run "ipconfig /flushdns".
+6. Reset TCP/IP:
+   - netsh int ip reset
+7. Check interference (WiFi channels 1/6/11).
+8. Check background downloads.
+9. Try safe mode with networking.
+
+PING, TRACERT, NSLOOKUP
+- ping tests connectivity.
+- tracert traces routing path.
+- nslookup checks DNS.
+
+ROUTER CONFIG
+- Access via 192.168.1.1 or 192.168.0.1.
+- Change DNS to 8.8.8.8/1.1.1.1.
+- Check router logs for disconnects.
+- Update router firmware.
+
+VPN BASICS
+- VPN encrypts traffic and changes routing.
+- VPN can slow internet drastically.
+- Common fixes:
+  - Change server region.
+  - Disable split tunneling.
+  - Switch protocol (WireGuard vs OpenVPN).
+
+COMMON WIFI FIXES
+- Reset network settings.
+- Forget and reconnect to network.
+- Change 5 GHz ↔ 2.4 GHz band.
+- Disable power saving on WiFi adapter.
+
+LINUX NETWORK FIXES
+- Restart NetworkManager:
+  - systemctl restart NetworkManager
+- Check logs:
+  - journalctl -u NetworkManager

@@ -1,0 +1,451 @@
+ENTERPRISE TECH GLOSSARY — COMPLETE IT TERMINOLOGY & ACRONYMS FOR HELP DESK + SYSTEM ADMIN SUPPORT
+
+INTRODUCTION
+This glossary covers the most common IT terminology used in corporate environments. Your technical support assistant must understand these terms to properly explain issues, troubleshoot, and communicate with users or senior engineers.
+
+----------------------------------------------------------------------------------------------------
+SECTION 1 — AUTHENTICATION, IDENTITY & ACCESS TERMS
+----------------------------------------------------------------------------------------------------
+
+AD (Active Directory)  
+Directory service used for authentication, authorization, and centralized management of users, computers, and policies.
+
+AAD / Azure AD  
+Cloud-based identity platform by Microsoft. Used for Microsoft 365 login and cloud identity management.
+
+SSO (Single Sign-On)  
+User logs in once and gains access to multiple systems without re-entering credentials.
+
+MFA (Multi-Factor Authentication)  
+Authentication using more than one factor:  
+- Something you know (password)  
+- Something you have (phone/token)  
+- Something you are (biometrics)
+
+RBAC (Role-Based Access Control)  
+Access given based on job role.
+
+ACL (Access Control List)  
+Permissions assigned to a file, folder, or resource.
+
+LDAP (Lightweight Directory Access Protocol)  
+Protocol used to access directory services like Active Directory.
+
+Kerberos  
+Primary authentication protocol in Windows domains; requires synchronized time.
+
+NTLM  
+Older authentication protocol; fallback if Kerberos fails.
+
+----------------------------------------------------------------------------------------------------
+SECTION 2 — NETWORKING TERMS
+----------------------------------------------------------------------------------------------------
+
+IP (Internet Protocol)  
+Address that identifies a device on a network.
+
+Subnet Mask  
+Defines network boundary and host range.
+
+Gateway  
+Router that sends traffic outside local network.
+
+DNS (Domain Name System)  
+Resolves domain names → IP addresses.
+
+DHCP (Dynamic Host Configuration Protocol)  
+Assigns IP addresses automatically.
+
+NAT (Network Address Translation)  
+Translates private IP → public IP.
+
+LAN / WAN / MAN  
+Local, Wide, Metropolitan area networks.
+
+VLAN (Virtual LAN)  
+Segregates networks logically.
+
+VPN (Virtual Private Network)  
+Encrypted tunnel for remote access.
+
+Ping  
+Checks connectivity.
+
+Traceroute / tracert  
+Shows path packets take to destination.
+
+Port  
+Logical endpoint for communication (e.g., 80, 443, 22, 3389).
+
+Firewall  
+Controls inbound/outbound traffic.
+
+Proxy  
+Server that filters or redirects traffic.
+
+RDP / SSH  
+Remote desktop (Windows) / remote shell (Linux).
+
+----------------------------------------------------------------------------------------------------
+SECTION 3 — OPERATING SYSTEM TERMS
+----------------------------------------------------------------------------------------------------
+
+Kernel  
+Core part of OS that manages hardware.
+
+Driver  
+Software that lets OS communicate with hardware.
+
+Registry (Windows)  
+Database of system and application settings.
+
+PowerShell  
+Advanced shell + scripting language for automation.
+
+Command Prompt (cmd.exe)  
+Legacy Windows command interpreter.
+
+Shell  
+Interface to interact with OS (bash, zsh, sh).
+
+Service / Daemon  
+Background process that performs system functions.
+
+Patch / Update  
+Software fixes or security enhancements.
+
+Task Scheduler / cron  
+Automates tasks.
+
+----------------------------------------------------------------------------------------------------
+SECTION 4 — HARDWARE TERMS
+----------------------------------------------------------------------------------------------------
+
+CPU (Central Processing Unit)  
+Main processor of the computer.
+
+Cores  
+Separate processing units inside CPUs.
+
+Threads  
+Virtual execution paths.
+
+RAM (Random Access Memory)  
+Temporary memory where apps run.
+
+SSD / HDD  
+Solid-state drive / hard disk drive.
+
+GPU  
+Graphics processor.
+
+PSU (Power Supply Unit)  
+Supplies power to the computer.
+
+Thermal Throttling  
+CPU/GPU slows down due to overheating.
+
+POST (Power-On Self-Test)  
+Diagnostic test during boot.
+
+BIOS / UEFI  
+Firmware that initializes hardware before the OS loads.
+
+----------------------------------------------------------------------------------------------------
+SECTION 5 — CLOUD & INFRASTRUCTURE TERMS
+----------------------------------------------------------------------------------------------------
+
+VM (Virtual Machine)  
+Software-based system running OS.
+
+Hypervisor  
+Software that manages VMs (Hyper-V, VMware ESXi).
+
+Container  
+Lightweight alternative to VMs (Docker).
+
+Cluster  
+Group of servers working together.
+
+Load Balancer  
+Distributes traffic across multiple servers.
+
+SaaS, IaaS, PaaS  
+Software/Infrastructure/Platform as a Service.
+
+Object Storage  
+Storage type used in cloud platforms (S3, Azure Blob).
+
+----------------------------------------------------------------------------------------------------
+SECTION 6 — SECURITY TERMS
+----------------------------------------------------------------------------------------------------
+
+Antivirus / EDR  
+Endpoint protection tools (Defender, CrowdStrike).
+
+Phishing  
+Fraudulent attempts to steal personal data.
+
+Zero Trust  
+Security principle: trust no device/user by default.
+
+SOC (Security Operations Center)  
+Monitors and responds to threats.
+
+SIEM (Security Information & Event Management)  
+Logs + threat detection (Splunk, Sentinel).
+
+Encryption  
+Scrambling data so only authorized parties can read.
+
+Certificate  
+Digital identity verification, used for HTTPS.
+
+DDOS  
+Distributed attack to overload servers.
+
+----------------------------------------------------------------------------------------------------
+SECTION 7 — TROUBLESHOOTING TERMS
+----------------------------------------------------------------------------------------------------
+
+Root Cause Analysis (RCA)  
+Determining the actual reason behind an issue.
+
+Reproduction  
+Repeating the issue by following exact steps.
+
+Isolation  
+Separating components to find the failing one.
+
+Logs  
+Recorded events for debugging.
+
+Symptom vs Cause  
+Symptom = “slow internet”; cause = bad DNS.
+
+Regression  
+Something breaks after an update or change.
+
+----------------------------------------------------------------------------------------------------
+SECTION 8 — ACTIVE DIRECTORY & WINDOWS ADMIN TERMS
+----------------------------------------------------------------------------------------------------
+
+OU (Organizational Unit)  
+Container in AD used to group users/computers.
+
+GPO (Group Policy Object)  
+Rules applied to configure users/computers.
+
+SYSVOL  
+Folder on DC that stores policies and scripts.
+
+FSMO Roles  
+Critical AD roles like:
+- Schema master  
+- Domain naming master  
+- PDC emulator  
+- RID master  
+- Infrastructure master  
+
+DC (Domain Controller)  
+Server that handles authentication.
+
+UPN (User Principal Name)  
+username@domain.com
+
+SID (Security Identifier)  
+Unique ID for users/groups.
+
+SPN (Service Principal Name)  
+Identifier used by Kerberos.
+
+UNC Path  
+\\server\share\folder
+
+----------------------------------------------------------------------------------------------------
+SECTION 9 — WINDOWS NETWORKING TERMS
+----------------------------------------------------------------------------------------------------
+
+WINSOCK  
+Windows networking API.
+
+TCP/IP Stack  
+Networking components controlling internet communication.
+
+DHCP Lease  
+Time duration of assigned IP.
+
+NIC (Network Interface Card)  
+Physical or virtual network adapter.
+
+APIPA (169.254.x.x)  
+Self-assigned IP when DHCP fails.
+
+SMB (Server Message Block)  
+Protocol for file sharing.
+
+----------------------------------------------------------------------------------------------------
+SECTION 10 — STORAGE & BACKUP TERMS
+----------------------------------------------------------------------------------------------------
+
+RAID  
+Redundant array for disk reliability:
+- RAID 0 → speed  
+- RAID 1 → mirror  
+- RAID 5 → parity  
+- RAID 10 → speed + redundancy  
+
+NAS / SAN  
+Network storage systems.
+
+Snapshot  
+Point-in-time backup of VM.
+
+Incremental / Differential Backup  
+Incremental: Only changed data  
+Differential: Changed since last full backup
+
+----------------------------------------------------------------------------------------------------
+SECTION 11 — SOFTWARE & APPLICATION TERMS
+----------------------------------------------------------------------------------------------------
+
+Cache  
+Temporary data storage.
+
+API (Application Programming Interface)  
+Allows software to communicate.
+
+Runtime  
+Environment where software executes.
+
+Dependencies  
+Required components for an app to run.
+
+Container Image  
+Package containing app + dependencies.
+
+Log File  
+Record of system/application events.
+
+----------------------------------------------------------------------------------------------------
+SECTION 12 — EMAIL & EXCHANGE TERMS
+----------------------------------------------------------------------------------------------------
+
+Mailbox  
+Email storage for a user.
+
+Distribution List  
+Email group with multiple recipients.
+
+Shared Mailbox  
+Mailbox used by multiple users.
+
+SMTP  
+Protocol for sending email.
+
+IMAP / POP3  
+Protocols for receiving email.
+
+Autodiscover  
+Automatically configures email settings.
+
+----------------------------------------------------------------------------------------------------
+SECTION 13 — VIRTUALIZATION TERMS
+----------------------------------------------------------------------------------------------------
+
+VMware Tools / Hyper-V Integration Services  
+Drivers that allow smooth VM operation.
+
+vCPU  
+Virtual CPU assigned to a VM.
+
+Hot Add  
+Adding CPU/RAM to a VM without shutdown (if supported).
+
+Thin vs Thick Provisioning  
+Thin: dynamic size  
+Thick: full size allocated immediately
+
+----------------------------------------------------------------------------------------------------
+SECTION 14 — CLOUD PLATFORM TERMS
+----------------------------------------------------------------------------------------------------
+
+Azure AD Connect  
+Syncs on-prem AD → Azure AD.
+
+Azure VM  
+Virtual Machine in Azure.
+
+IAM (Identity and Access Management)  
+Manages cloud permissions.
+
+Security Groups / NSGs  
+Firewall-like rules for cloud VMs.
+
+Availability Zone  
+Physically separate datacenter.
+
+----------------------------------------------------------------------------------------------------
+SECTION 15 — COMMON IT ACRONYMS (MASTER LIST)
+----------------------------------------------------------------------------------------------------
+
+AD → Active Directory  
+DC → Domain Controller  
+OU → Organizational Unit  
+GPO → Group Policy Object  
+DNS → Domain Name System  
+DHCP → Dynamic Host Config Protocol  
+SMB → Server Message Block  
+RDP → Remote Desktop Protocol  
+SSH → Secure Shell  
+API → Application Programming Interface  
+CPU → Central Processing Unit  
+RAM → Random Access Memory  
+VPN → Virtual Private Network  
+LAN → Local Area Network  
+WAN → Wide Area Network  
+NIC → Network Interface Card  
+PSU → Power Supply Unit  
+HDD → Hard Disk Drive  
+SSD → Solid State Drive  
+OS → Operating System  
+SFC → System File Checker  
+DISM → Deployment Image Servicing and Management  
+ACL → Access Control List  
+RBAC → Role Based Access Control  
+MFA → Multi-factor Authentication  
+IAM → Identity & Access Management  
+VM → Virtual Machine  
+RCA → Root Cause Analysis  
+EDR → Endpoint Detection & Response  
+SIEM → Security Info & Event Mgmt  
+DNSSEC → DNS Security Extensions  
+
+----------------------------------------------------------------------------------------------------
+SECTION 16 — EXTRA DEFINITIONS USERS OFTEN ASK ABOUT
+----------------------------------------------------------------------------------------------------
+
+Bandwidth  
+Maximum data transfer capacity.
+
+Latency  
+Time taken for a packet to travel.
+
+Proxy Server  
+Intermediary server used for access filtering.
+
+Load Balancer  
+Distributes network traffic.
+
+Failover  
+Automatic switch to backup system.
+
+Patch Tuesday  
+Microsoft's monthly update release day.
+
+Golden Image  
+Standard OS image used to deploy systems.
+
+----------------------------------------------------------------------------------------------------
+END OF FILE
+----------------------------------------------------------------------------------------------------
